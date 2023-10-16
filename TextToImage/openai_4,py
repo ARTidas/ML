@@ -1,0 +1,24 @@
+import openai
+import requests
+from requests.structures import CaseInsensitiveDict
+
+openai.api_key = "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"
+
+model = "image-alpha-001"
+prompt = "Generate an image of: A beautiful lady in the night."
+
+response = openai.Completion.create(
+    engine=model,
+    prompt=prompt,
+    max_tokens=16,
+    n=1,
+    stop=None,
+    temperature=0.5,
+)
+
+#image_url = response.choices[0].image_url
+#print(image_url)
+#image_url = response.choices[0].image_url
+print(response)
+image_url = response.choices[0].image_url
+print(image_url)

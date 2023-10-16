@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8" />
+    <title>TensorFlow.js browser example</title>
+
+    <!-- Load TensorFlow.js from a script tag -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
+  </head>
+  <body>
+    <h1>TensorFlow.js example</h1>
+    <h2>Open the console to see the results.</h2>
+    <script>
+        population_size = 40
+        // With an initial population and a multi-part state.
+        initial_population = (tf.random.normal([population_size]),
+                                tf.random.normal([population_size]))
+        def easom_fn(x, y):
+            return -(tf.math.cos(x) * tf.math.cos(y) *
+                    tf.math.exp(-(x-np.pi)**2 - (y-np.pi)**2))
+
+        optim_results = tfp.optimizer.differential_evolution_minimize(
+            easom_fn,
+            initial_population=initial_population,
+            seed=43210)
+
+        print(optim_results.converged)
+        print(optim_results.position)  // Should be (close to) [pi, pi].
+        print(optim_results.objective_value)    // Should be -1.
+
+
+        // With a single starting point
+        initial_position = (tf.constant(1.0), tf.constant(1.0))
+
+        optim_results = tfp.optimizer.differential_evolution_minimize(
+            easom_fn,
+            initial_position=initial_position,
+            population_size=40,
+            population_stddev=2.0,
+            seed=43210)
+    </script>
+  </body>
+</html>
