@@ -8,10 +8,18 @@ body {
     text-align: left;
     min-height: 100%;
     margin: auto;
+    font-size: 28px;
 }
 body div {
     margin-left: 5px;
     margin-right: 5px;
+}
+
+iframe {
+    display: block; /* iframes are inline by default */
+    width: 98vw;    /* Viewport-relative units */
+    height: 86vh;
+    border: none;
 }
 
 .p5Canvas {
@@ -20,12 +28,6 @@ body div {
     margin: 10px;
 }
 
-iframe {
-    display: block; /* iframes are inline by default */
-    width: 98vw;    /* Viewport-relative units */
-    height: 89vh;
-    border: none;
-}
 
 header {
     font-size: 18px;
@@ -39,10 +41,15 @@ footer p {
     margin: 0px;
     padding-left: 5px;
     padding-right: 5px;
+    font-size: 0.6em;
 }
 
 h1 {
     text-align: center;
+    font-size: 1.3em;
+}
+h2 {
+    font-size: 1.2em;
 }
 
 ol {
@@ -50,10 +57,12 @@ ol {
 }
 li {
     display: inline;
+    font-size: 0.6em;
 }
 
 #the_header_logo {
     height: 6vh;
+    margin-left: 5px;
 }
 #the_logo {
     height: 50vh;
