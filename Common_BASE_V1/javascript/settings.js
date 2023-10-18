@@ -1,29 +1,125 @@
 const settings = {
-    number_of_data_points: 30,
-    //learning_rate: 0.000001,
-    //learning_rate: 0.0000059,
-    //learning_rate: 0.0000051,
-      learning_rate: 0.0000049,
-    iterations: 10000,
+    number_of_robots: 20,
+    robot_color: '#0f0',
+    robot_starting_position_x: 15,
+    robot_starting_position_y: 15,
+    robot_width: 20,
+    robot_movement_min: -1,
+    robot_movement_max: 1,
+    robot_population_size: 20,
 
-    fluctuation_from_canvas_diagonal: 100,
-
-    //////////////////////////////// DEPRECATED //
-    time_between_rounds: 100, // In milliseconds, 1000 milisecond = 1 second
-    time_between_spawns: 100,
-    time_between_movements: 100,
-    maximum_movement: 10,
-
-    population_starting_position_x: 15,
-    population_starting_position_y: 15,
-
-    candidate_width: 5,
-    candidate_movement_min: -1,
-    candidate_movement_max: 1,
-
-    population_size: 20,
-    evolve_after_cycles: 100,
-    maximum_generation_number: 100,
-
+    target_color: '#0f0',
     target_search_treshold: 10,
+    target_width: 20,
 };
+
+const target_types = [
+    {
+        color: '#f00',
+        shape: 'circle',
+        width: settings.target_width,
+        edible: true,
+    },
+    {
+        color: '#ff0',
+        shape: 'circle',
+        width: settings.target_width,
+        edible: true,
+    },
+    {
+        color: '#00f',
+        shape: 'circle',
+        width: settings.target_width,
+        edible: true,
+    },
+    {
+        color: '#f00',
+        shape: 'circle',
+        width: settings.target_width + 10,
+        edible: true,
+    },
+    {
+        color: '#ff0',
+        shape: 'circle',
+        width: settings.target_width + 10,
+        edible: true,
+    },
+    {
+        color: '#00f',
+        shape: 'circle',
+        width: settings.target_width + 10,
+        edible: true,
+    },
+    {
+        color: '#f00',
+        shape: 'rect',
+        width: settings.target_width,
+        edible: false,
+    },
+    {
+        color: '#ff0',
+        shape: 'rect',
+        width: settings.target_width,
+        edible: false,
+    },
+    {
+        color: '#00f',
+        shape: 'rect',
+        width: settings.target_width,
+        edible: false,
+    },
+    {
+        color: '#f00',
+        shape: 'rect',
+        width: settings.target_width + 10,
+        edible: false,
+    },
+    {
+        color: '#ff0',
+        shape: 'rect',
+        width: settings.target_width + 10,
+        edible: false,
+    },
+    {
+        color: '#00f',
+        shape: 'rect',
+        width: settings.target_width + 10,
+        edible: false,
+    },
+    {
+        color: '#f00',
+        shape: 'triangle',
+        width: settings.target_width,
+        edible: false,
+    },
+    {
+        color: '#ff0',
+        shape: 'triangle',
+        width: settings.target_width,
+        edible: false,
+    },
+    {
+        color: '#00f',
+        shape: 'triangle',
+        width: settings.target_width,
+        edible: false,
+    },
+    {
+        color: '#f00',
+        shape: 'triangle',
+        width: settings.target_width + 10,
+        edible: false,
+    },
+    {
+        color: '#ff0',
+        shape: 'triangle',
+        width: settings.target_width + 10,
+        edible: false,
+    },
+    {
+        color: '#00f',
+        shape: 'triangle',
+        width: settings.target_width + 10,
+        edible: false,
+    },
+];

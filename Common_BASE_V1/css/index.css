@@ -56,8 +56,12 @@ ol {
     margin: 0px;
 }
 li {
+    font-size: 1em;
+}
+header li {
+    float: left;
     display: inline;
-    font-size: 0.6em;
+    margin-right: 10px;
 }
 
 #the_header_logo {
