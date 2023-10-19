@@ -11,7 +11,7 @@ const treeData = {
                             name: "is_circle",
                             children: [
                                 {
-                                    name: "END"//name: "RED, LARGE, CIRCLE"
+                                    name: "IS EDIBLE"//name: "RED, LARGE, CIRCLE"
                                 }
                             ]
                         },
@@ -22,7 +22,7 @@ const treeData = {
                                     name: "is_rect",
                                     children: [
                                         {
-                                            name: "END"//name: "RED, LARGE, RECT"
+                                            name: "IS NOT EDIBLE"//name: "RED, LARGE, RECT"
                                         },
                                         {
                                             name: "is_not_rect",
@@ -31,7 +31,7 @@ const treeData = {
                                                     name: "is_triangle",
                                                     children: [
                                                         {
-                                                            name: "END"//name: "RED, LARGE, TRIANGLE"
+                                                            name: "IS NOT EDIBLE"//name: "RED, LARGE, TRIANGLE"
                                                         }
                                                     ]
                                                 },
@@ -58,7 +58,7 @@ const treeData = {
                             name: "is_circle",
                             children: [
                                 {
-                                    name: "END"//name: "RED, NOT LARGE, CIRCLE"
+                                    name: "IS EDIBLE"//name: "RED, NOT LARGE, CIRCLE"
                                 }
                             ]
                         },
@@ -69,7 +69,7 @@ const treeData = {
                                     name: "is_rect",
                                     children: [
                                         {
-                                            name: "END"
+                                            name: "IS NOT EDIBLE"
                                         },
                                         {
                                             name: "is_not_rect",
@@ -78,7 +78,7 @@ const treeData = {
                                                     name: "is_triangle",
                                                     children: [
                                                         {
-                                                            name: "END"
+                                                            name: "IS NOT EDIBLE"
                                                         }
                                                     ]
                                                 },
@@ -113,7 +113,7 @@ const treeData = {
                                     name: "is_circle",
                                     children: [
                                         {
-                                            name: "END"//name: "BLUE, LARGE, CIRCLE"
+                                            name: "IS EDIBLE"//name: "BLUE, LARGE, CIRCLE"
                                         }
                                     ]
                                 },
@@ -124,7 +124,7 @@ const treeData = {
                                             name: "is_rect",
                                             children: [
                                                 {
-                                                    name: "END"
+                                                    name: "IS NOT EDIBLE"
                                                 },
                                                 {
                                                     name: "is_not_rect",
@@ -133,7 +133,7 @@ const treeData = {
                                                             name: "is_triangle",
                                                             children: [
                                                                 {
-                                                                    name: "END"
+                                                                    name: "IS NOT EDIBLE"
                                                                 }
                                                             ]
                                                         },
@@ -160,7 +160,7 @@ const treeData = {
                                     name: "is_circle",
                                     children: [
                                         {
-                                            name: "END"//name: "BLUE, NOT LARGE, CIRCLE"
+                                            name: "IS EDIBLE"//name: "BLUE, NOT LARGE, CIRCLE"
                                         }
                                     ]
                                 },
@@ -171,7 +171,7 @@ const treeData = {
                                             name: "is_rect",
                                             children: [
                                                 {
-                                                    name: "END"
+                                                    name: "IS NOT EDIBLE"
                                                 },
                                                 {
                                                     name: "is_not_rect",
@@ -180,7 +180,7 @@ const treeData = {
                                                             name: "is_triangle",
                                                             children: [
                                                                 {
-                                                                    name: "END"
+                                                                    name: "IS NOT EDIBLE"
                                                                 }
                                                             ]
                                                         },
@@ -215,7 +215,7 @@ const treeData = {
                                             name: "is_circle",
                                             children: [
                                                 {
-                                                    name: "END"
+                                                    name: "IS EDIBLE"
                                                 }
                                             ]
                                         },
@@ -226,7 +226,7 @@ const treeData = {
                                                     name: "is_rect",
                                                     children: [
                                                         {
-                                                            name: "END"
+                                                            name: "IS NOT EDIBLE"
                                                         },
                                                         {
                                                             name: "is_not_rect",
@@ -235,7 +235,7 @@ const treeData = {
                                                                     name: "is_triangle",
                                                                     children: [
                                                                         {
-                                                                            name: "END"
+                                                                            name: "IS NOT EDIBLE"
                                                                         }
                                                                     ]
                                                                 },
@@ -262,7 +262,7 @@ const treeData = {
                                             name: "is_circle",
                                             children: [
                                                 {
-                                                    name: "END"
+                                                    name: "IS EDIBLE"
                                                 }
                                             ]
                                         },
@@ -273,7 +273,7 @@ const treeData = {
                                                     name: "is_rect",
                                                     children: [
                                                         {
-                                                            name: "END"
+                                                            name: "IS NOT EDIBLE"
                                                         },
                                                         {
                                                             name: "is_not_rect",
@@ -282,7 +282,7 @@ const treeData = {
                                                                     name: "is_triangle",
                                                                     children: [
                                                                         {
-                                                                            name: "END"
+                                                                            name: "IS NOT EDIBLE"
                                                                         }
                                                                     ]
                                                                 },
@@ -320,15 +320,17 @@ const treeData = {
 };
 
 const width = window.innerWidth * 0.95;
-const height = window.innerHeight * 0.95;
+const height = window.innerHeight * 0.85;
+
+const dendrogram_strecting_factor_y = 2;
+const dendrogram_strecting_factor_x = 0.65;
 
 const svg = d3.select("body")
     .append("svg")
     .attr("width", width)
     .attr("height", height)
     .append("g")
-    .attr("transform", "translate(" + width * 0.03 + ", " + height * 0.03 + ")")
-;
+    .attr("transform", "translate(" + width * 0.03 + ", " + height * 0.03 + ")");
 
 const treeLayout = d3.tree().size([width * 0.6, height]);
 const root = d3.hierarchy(treeData);
@@ -339,21 +341,21 @@ const nodes = svg.selectAll(".node")
     .enter()
     .append("g")
     .attr("class", "node")
-    .attr("transform", d => `translate(${d.y},${d.x})`)
-;
+    .attr("transform", d => `translate(
+        ${d.y * dendrogram_strecting_factor_y},
+        ${d.x * dendrogram_strecting_factor_x}
+    )`);
 
 nodes.append("circle")
     .attr("r", 3);
 
 nodes.append("text")
     .text(d => d.data.name)
-    .attr("x", d => d.children ? 0 : 20)
+    .attr("x", d => d.children ? 0 : 10)
     .attr("y", d => d.children ? -10 : 0)
     .attr("dy", 5)
-    //.attr("textLength", "90")
-    //.attr("transform", "rotate(-10)")
-    .attr("text-anchor", "middle")
-;
+    .attr("font-size", "16px")
+    .attr("text-anchor", "left");
 
 const links = svg.selectAll(".link")
     .data(tree.links())
@@ -362,38 +364,11 @@ const links = svg.selectAll(".link")
     .attr("class", "link")
     .style('stroke', '#000')
     .attr("d", d => {
-        return `M${d.source.y},${d.source.x} L${d.target.y},${d.target.x}`;
+        //return `M${d.source.y},${d.source.x} L${d.target.y},${d.target.x}`;
+        return `
+            M${d.source.y * dendrogram_strecting_factor_y},
+            ${d.source.x * dendrogram_strecting_factor_x} 
+            L${d.target.y * dendrogram_strecting_factor_y},
+            ${d.target.x * dendrogram_strecting_factor_x}
+        `;
     });
-    /*.attr("d", d => {
-        return   `M${d.source.y},${d.source.x} C${(d.source.y + d.target.y) / 2},${d.source.x} ${(d.source.y + d.target.y) / 2},${d.target.x} ${d.target.y},${d.target.x}`;
-        //return `M${sourceY},${sourceX} L${(sourceY + targetY) / 2},${sourceX} ${(sourceY + targetY) / 2},${targetX} ${targetY},${targetX}`;
-    });*/
-
-/*const straight = d => "M" + d.source.x + "," + d.source.y
-    + "H" + d.target.x + "V" + d.target.y;
-
-const link = svg.selectAll('.link')
-    .data(links)
-    .enter()
-    .append('path')
-    .attr('class', 'link')
-    .style('stroke', '#8da0cb')
-    .attr('d', straight);*/
-
-// Create links for all nodes, including those with single children
-/*const links = svg.selectAll(".link");
-
-tree.each((node) => {
-    if (node.parent) {
-        links
-            .append("path")
-            .attr("class", "link")
-            .attr("d", () => {
-                const sourceX = node.parent.x;
-                const sourceY = node.parent.y;
-                const targetX = node.x;
-                const targetY = node.y;
-                return `M${sourceY},${sourceX} L${(sourceY + targetY) / 2},${sourceX} ${(sourceY + targetY) / 2},${targetX} ${targetY},${targetX}`;
-            });
-    }
-});*/

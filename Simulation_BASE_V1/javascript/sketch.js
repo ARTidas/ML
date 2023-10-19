@@ -54,8 +54,8 @@ function draw() {
                         canvas.getWidth() / 2,
                         canvas.getHeight() / 2
                     );
-                    saveCanvas(canvas.object, 'simulation_base_v1_edible.png');
-                    noLopp();
+                    //saveCanvas(canvas.object, 'simulation_base_v1_edible.png');
+                    //noLopp();
                 }
                 else {
                     fill('#f00');
@@ -65,8 +65,8 @@ function draw() {
                         canvas.getWidth() / 2,
                         canvas.getHeight() / 2
                     );
-                    saveCanvas(canvas.object, 'simulation_base_v1_inedible.png');
-                    noLopp();
+                    //saveCanvas(canvas.object, 'simulation_base_v1_inedible.png');
+                    //noLopp();
                 }
             }
         }
