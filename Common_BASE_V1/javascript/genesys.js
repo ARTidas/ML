@@ -37,7 +37,13 @@ class Genesys {
     };
 
     intersects(target_object) {
-        return dist(this.x, this.y, target_object.x, target_object.y) < target_object.width;
+        return dist(
+                this.x,
+                this.y,
+                target_object.x,
+                target_object.y
+            ) < target_object.width
+        ;
     };
 
     moveTowardsObjectWithGradientDescent(target_object, acceleration = 0) {
