@@ -1,1 +1,0 @@
-In order to run this project, you need to open the project folder in Visual Studio and run a live server.
