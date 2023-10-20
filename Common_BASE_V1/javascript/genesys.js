@@ -69,4 +69,22 @@ class Genesys {
     getRandomNumber(minimum, maximum) {
         return Math.floor(Math.random() * (maximum - minimum + 1) + minimum);
     };
+
+    getRandomHexColor() {
+        return (
+            '#' + 
+            this.getRandomHexNumber() + 
+            this.getRandomHexNumber() + 
+            this.getRandomHexNumber()
+        );
+    };
+    getRandomHexNumber() {
+        var possible_hex_numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 'a', 'b', 'c', 'd', 'e', 'f'];
+
+        return (
+            possible_hex_numbers[
+                Math.floor(Math.random() * possible_hex_numbers.length)
+            ]
+        );
+    };
 };
