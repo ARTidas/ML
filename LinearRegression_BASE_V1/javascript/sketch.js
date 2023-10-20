@@ -19,15 +19,15 @@ const settings = {
  ** ********************************************************************/
 function setup() {
     canvas.object = createCanvas(
-        canvas.getCanvasWidth(),
-        canvas.getCanvasHeight()
+        canvas.getWidth(),
+        canvas.getHeight()
     );
 
     //Lets create an initial starting target
     targets.push(
         new Target(
-            canvas.getCanvasWidth() * 0.95,
-            canvas.getCanvasHeight() * 0.95
+            canvas.getWidth() * 0.95,
+            canvas.getHeight() * 0.95
         )
     );
 };
@@ -37,20 +37,20 @@ function setup() {
  ** ********************************************************************/
 function draw() {
     console.log('Next cycle...');
-    //frameRate(10);
-    background('#888');
+    //frameRate(3);
+    background('#ddd');
 
-    targets.forEach((target) => {
+    for (let target of targets) {
         if (target.is_dragged) {
             target.x = mouseX;
             target.y = mouseY;
         }
         target.display();
-    });
+    }
 
     drawLinearRegressionLine();
 
-    noLoop();
+    //noLoop();
 };
 
 /** ********************************************************************
@@ -59,21 +59,21 @@ function draw() {
 function mousePressed() {
     var mouse_pressed_on_empty_space = true;
 
-    targets.forEach((target) => {
+    for (let target of targets) {
         if (dist(target.x, target.y, mouseX, mouseY) < target.width) {
             target.is_dragged = true;
             mouse_pressed_on_empty_space = false;
         }
-    });
+    }
     
     if (mouse_pressed_on_empty_space) {
         targets.push(new Target(mouseX, mouseY));
     }
 };
 function mouseReleased() {
-    targets.forEach((target) => {
+    for (let target of targets) {
         target.is_dragged = false;
-    });
+    }
 };
 
 function drawLinearRegressionLine() {
@@ -96,12 +96,12 @@ function drawLinearRegressionLine() {
         slope -= settings.learning_rate * (slope_gradient / targets.length);
         intercept -= settings.learning_rate * (intercept_gradient / targets.length);
         //console.log('x1: ' + 0 + ', y1: ' + intercept + ', x2: ' + canvas.getCanvasWidth() + ', y2: ' + canvas.getCanvasWidth() * slope + intercept);
-        console.log('y1: ' + intercept + ', y2: ' + (canvas.getCanvasWidth() * slope + intercept));
+        //console.log('y1: ' + intercept + ', y2: ' + (canvas.getWidth() * slope + intercept));
         line(
             0,
             intercept,
-            canvas.getCanvasWidth(),
-            canvas.getCanvasWidth() * slope + intercept
+            canvas.getWidth(),
+            canvas.getWidth() * slope + intercept
         );
     }
 };
