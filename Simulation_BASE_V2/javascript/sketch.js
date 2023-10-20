@@ -40,29 +40,16 @@ function draw() {
 
     for (let robot of robots) {
         robot.display();
-
-        /** ********************************************************************
-         ** *** kNN TO FIND CLOSEST TARGETS ************************************
-         ** ********************************************************************/
-        for (let target of robot.findNearestNeighbors(targets)) {
-            noFill();
-            strokeWeight(3);
-            stroke('#0f0');
-            ellipse(target.x, target.y, target.width + 3);
-        }
-
         for (let target of targets) {
             if (robot.intersects(target)) {
                 textAlign(CENTER, CENTER);
                 textSize(32);
-                stroke('black');
+                stroke(1);
 
-                /** ********************************************************************
-                 ** *** DECISION TREE FOR FEEDING **************************************
-                 ** ********************************************************************/
                 if (target.edible) {
                     fill('#0f0');
                     text(
+                        //String.fromCharCode(random((0x0001F571))),
                         'Robot found edible target!',
                         canvas.getWidth() / 2,
                         canvas.getHeight() / 2
@@ -71,8 +58,9 @@ function draw() {
                     //noLopp();
                 }
                 else {
-                    fill('red');
+                    fill('#f00');
                     text(
+                        //String.fromCharCode(random((0x00002764))),
                         'Robot died because of inedible target!',
                         canvas.getWidth() / 2,
                         canvas.getHeight() / 2
@@ -109,3 +97,4 @@ function mouseReleased() {
         target.is_dragged = false;
     }
 };
+

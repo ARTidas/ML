@@ -11,6 +11,9 @@ const settings = {
     target_color: '#0f0',
     target_search_treshold: 10,
     target_width: 20,
+
+    //kNearestNeighbors:
+    knn_k: 3, // Number of nearest neighbors to consider
 };
 
 const target_types = [

@@ -23,6 +23,8 @@ class Genesys {
 
     display() {
         fill(this.color);
+        strokeWeight(1);
+        stroke('black');
         this.object = circle(
             this.x,
             this.y,
