@@ -7,4 +7,15 @@ class Robot extends Genesys {
         this.width = settings.robot_width;
         this.color = settings.robot_color;
     };
+
+    findNearestNeighbors(targets, k = settings.knn_k) {
+        return (
+            targets.sort(
+                (a, b) => (
+                    dist(this.x, this.y, a.x, a.y) - dist(this.x, this.y, b.x, b.y)
+                )
+            )
+                .slice(0, k)
+        );
+    }
 };

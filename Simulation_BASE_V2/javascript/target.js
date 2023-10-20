@@ -12,6 +12,8 @@ class Target extends Genesys {
     };
 
     display() {
+        strokeWeight(1);
+        stroke('black');
         fill(this.color);
 
         switch(this.shape) {
