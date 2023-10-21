@@ -4,10 +4,13 @@ let canvas = new Canvas();
 let a = 1; // Coefficient of x^2
 let b = 2; // Coefficient of x
 let c = 1; // Constant
-let x = 2;
+
+let x = canvas.getWidth();
 let learning_rate = 0.1;
 
 let a_slider, b_slider, c_slider;
+
+let gradient_descent_calculations = [];
 
 /** ********************************************************************
  ** *** MAIN ENTRY FUNCTION ********************************************
@@ -18,12 +21,12 @@ function setup() {
         canvas.getHeight() - 120
     );
     
-    a_slider = createSlider(-2, 2, a, 0.01);
+    a_slider = createSlider(-1.1, 2, a, 0.001);
     b_slider = createSlider(
         -canvas.getWidth() / 10,
         canvas.getWidth() / 10,
         b,
-        0.1
+        0.01
     );
     c_slider = createSlider(
         -canvas.getHeight() / 2,
@@ -50,7 +53,8 @@ function draw() {
     background('#ddd');
 
     drawCostFunction();
-    drawGradientDescentLine();
+    computeGradientDescentLines();
+    drawGradientDescentLines();
 
     //noLoop();
 };
@@ -63,6 +67,7 @@ function updateValues() {
 
     // Reset the position for gradient descent
     x = 2;
+    gradient_descent_calculations = [];
 }
 
 //Quadratic function
@@ -99,18 +104,32 @@ function drawCostFunction() {
     ellipse(vertexX + canvas.getWidth() / 2, -vertexY + canvas.getHeight() / 2, 8, 8);
 };
 
-function drawGradientDescentLine() {
+function computeGradientDescentLines() {
     // Gradient descent algorithm
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 20; i++) {
         let gradient = 2 * a * x + b; // Calculate the gradient of the cost function
         x = x - learning_rate * gradient; // Update the value of x
 
         // Draw a point to visualize the gradient descent
-        let y = costFunction(x);
-        let pos_x = x * 20 + canvas.getWidth() / 2; // Scale and position x for drawing
-        let pos_y = -y * 20 + canvas.getHeight() / 2; // Scale and position y for drawing
-        noStroke();
-        fill(0, 0, 255);
-        ellipse(pos_x, pos_y, 8, 8);
+        let pos_x = (x + canvas.getWidth() / 2); // Scale and position x for drawing
+        let pos_y = canvas.getHeight() / 2 - costFunction(x); // Compute y-coordinate based on cost function
+        
+        gradient_descent_calculations.push({
+            x: pos_x,
+            y: pos_y
+        });
+    }
+};
+
+function drawGradientDescentLines() {
+    for (let gradient_descent_calculation of gradient_descent_calculations) {
+        stroke(1);
+        fill('#0f0');
+        ellipse(
+            gradient_descent_calculation.x,
+            gradient_descent_calculation.y,
+            8,
+            8
+        );
     }
 };
