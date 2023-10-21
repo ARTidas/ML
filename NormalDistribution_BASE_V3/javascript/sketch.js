@@ -8,29 +8,29 @@ let curve_data = [];
 
 function setup() {
     canvas.object = createCanvas(
-        canvas.getCanvasWidth(),
-        canvas.getCanvasHeight()
+        canvas.getWidth(),
+        canvas.getHeight()
     );
 
     // Parameters for the normal distribution
-    mean = canvas.getCanvasWidth() / 2;
-    standard_deviation = canvas.getCanvasWidth() / 6;
+    mean = canvas.getWidth() / 2;
+    standard_deviation = canvas.getWidth() / 6;
     x_spacing = 1;
 }
 
 function draw() {
     console.log('Next cycle...');
     //frameRate(3);
-    background('#888');
+    background('#ddd');
 
     // Collect random data points
     let data_points = [];
-    for (let i = 0; i < canvas.getCanvasWidth(); i++) {
+    for (let i = 0; i < canvas.getWidth(); i++) {
         const x = randomGaussian(mean, standard_deviation);
         data_points.push(x);
 
         // Draw the collected data points
-        ellipse(x, canvas.getCanvasHeight() / 2, 3, 3);
+        ellipse(x, canvas.getHeight() / 2, 3, 3);
     }
 
     // Calculate probability density values for x values

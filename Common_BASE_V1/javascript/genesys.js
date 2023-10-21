@@ -4,7 +4,7 @@ class Genesys {
         this.y = 0;
         this.width = 0;
         this.speed = 1;
-        this.color = '#000';
+        this.color = 'black';
 
         this.object = null;
 
@@ -87,4 +87,86 @@ class Genesys {
             ]
         );
     };
+
+    findKNearestNeighbors(targets, k = settings.knn_k) {
+        return (
+            targets.sort(
+                (a, b) => (
+                    dist(this.x, this.y, a.x, a.y) - dist(this.x, this.y, b.x, b.y)
+                )
+            )
+                .slice(0, k)
+        );
+    };
+
+    getLinearRegressionAttributes(targets) {
+        let x_coordinates = [];
+        let y_coordinates = [];
+
+        for (let target of targets) {
+            x_coordinates.push(target.x);
+            y_coordinates.push(target.y);
+        }
+        
+        const n = x_coordinates.length;
+        
+        let sum_x = 0;
+        let sum_y = 0;
+        let sum_xy = 0;
+        let sum_x2 = 0;
+        let sum_y2 = 0;
+
+        for (let i = 0; i < n; i++) {
+            sum_x += x_coordinates[i];
+            sum_y += y_coordinates[i];
+            sum_xy += x_coordinates[i] * y_coordinates[i];
+            sum_x2 += x_coordinates[i] ** 2;
+            sum_y2 += y_coordinates[i] ** 2;
+        }
+
+        let slope = (n * sum_xy - sum_x * sum_y) / (n * sum_x2 - sum_x ** 2);
+        //Hackaround in case we would only have one x-y pair.
+        //console.log(Number.isNaN(slope));
+        if (Number.isNaN(slope)) {
+            slope = 0.000000000001;
+        }
+        const intercept = (sum_y - slope * sum_x) / n;
+        const r2 = (
+            (
+                (n * sum_xy - sum_x * sum_y) ** 
+                2
+            ) /
+            (
+                (n * sum_x2 - sum_x ** 2) * 
+                (n * sum_y2 - sum_y ** 2)
+            )
+        );
+
+        return {
+            slope: slope,
+            intercept: intercept,
+            r2: r2,
+        };
+    }
+
+    getTargetClusterDirection(targets) {
+        let x_coordinates = [];
+        let y_coordinates = [];
+
+        for (let target of targets) {
+            x_coordinates.push(target.x);
+            y_coordinates.push(target.y);
+        }
+    
+        return {
+            x: (
+                x_coordinates.reduce((accumulator, x) => accumulator + x, 0) / 
+                x_coordinates.length
+            ),
+            y: (
+                y_coordinates.reduce((accumulator, y) => accumulator + y, 0) /
+                y_coordinates.length
+            )
+        };
+    }
 };

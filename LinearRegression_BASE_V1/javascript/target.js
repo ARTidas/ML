@@ -1,5 +1,5 @@
 class Target extends Genesys {
-    constructor(x, y, width = 10) {
+    constructor(x, y, width = settings.target_width) {
         super();
 
         this.x = x;

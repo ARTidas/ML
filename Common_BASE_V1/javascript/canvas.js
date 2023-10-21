@@ -1,5 +1,7 @@
-class Canvas {
+class Canvas extends Genesys {
     constructor() {
+        super();
+        
         this.object = null;
 
         this.x1 = 0;

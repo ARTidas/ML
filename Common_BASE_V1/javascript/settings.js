@@ -8,12 +8,16 @@ const settings = {
     robot_movement_max: 1,
     robot_population_size: 20,
 
-    target_color: '#0f0',
+    target_color: 'red',
     target_search_treshold: 10,
     target_width: 20,
 
     //kNearestNeighbors:
     knn_k: 3, // Number of nearest neighbors to consider
+
+    //Regression
+    regression_learning_rate: 0.0000001,
+    regression_number_of_iterations: 20,
 };
 
 const target_types = [
