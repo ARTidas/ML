@@ -1,11 +1,11 @@
-class Hunter extends Genesys {
-    constructor(x, y, width = 10) {
+class Target extends Genesys {
+    constructor(x, y, width = 20) {
         super();
 
         this.x = x;
         this.y = y;
         this.width = width;
-        this.color = '#f00';
+        this.color = 'red';
     }
 
     display() {

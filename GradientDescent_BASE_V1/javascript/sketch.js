@@ -1,27 +1,44 @@
 let canvas = new Canvas();
-let targets = [];
-let hunter = new Hunter(0, 0);
 
-const settings = {
-    candidate_width: 10,
-};
+// Project variables
+let a = 1; // Coefficient of x^2
+let b = 2; // Coefficient of x
+let c = 1; // Constant
+let x = 2;
+let learning_rate = 0.1;
+
+let a_slider, b_slider, c_slider;
 
 /** ********************************************************************
  ** *** MAIN ENTRY FUNCTION ********************************************
  ** ********************************************************************/
 function setup() {
     canvas.object = createCanvas(
-        canvas.getCanvasWidth(),
-        canvas.getCanvasHeight()
+        canvas.getWidth(),
+        canvas.getHeight() - 120
+    );
+    
+    a_slider = createSlider(-2, 2, a, 0.01);
+    b_slider = createSlider(
+        -canvas.getWidth() / 10,
+        canvas.getWidth() / 10,
+        b,
+        0.1
+    );
+    c_slider = createSlider(
+        -canvas.getHeight() / 2,
+        canvas.getHeight() / 2,
+        c,
+        0.1
     );
 
-    //Lets create an initial starting target.
-    targets.push(
-        new Target(
-            canvas.getCanvasWidth() * 0.95,
-            canvas.getCanvasHeight() * 0.95
-        )
-    );
+    a_slider.position(20, canvas.getHeight() - 120 + 20);
+    b_slider.position(20, canvas.getHeight() - 120 + 50);
+    c_slider.position(20, canvas.getHeight() - 120 + 80);
+
+    a_slider.input(updateValues);
+    b_slider.input(updateValues);
+    c_slider.input(updateValues);
 };
 
 /** ********************************************************************
@@ -29,57 +46,71 @@ function setup() {
  ** ********************************************************************/
 function draw() {
     console.log('Next cycle...');
-    //frameRate(10);
-    background('#888');
+    //frameRate(1);
+    background('#ddd');
 
-    hunter.display();
+    drawCostFunction();
+    drawGradientDescentLine();
 
-    targets.forEach((target) => {
-        if (target.is_dragged) {
-            target.x = mouseX;
-            target.y = mouseY;
-        }
-        target.display();
-    });
-
-    //Find the closest target
-    let closest_target = targets[0];
-    let closest_target_distance = dist(closest_target.x, closest_target.y, hunter.x, hunter.y);
-    targets.forEach((target) => {
-        if (dist(target.x, target.y, hunter.x, hunter.y) < closest_target_distance) {
-            closest_target = target;
-        }
-    });
-
-    //Move towards closest target
-    hunter.moveTowardsObjectWithGradientDescent(closest_target, 0.01);
-
-    targets.forEach((target) => {
-        if (hunter.intersects(target)) {
-            noLoop();
-        }
-    });
+    //noLoop();
 };
 
-/** ********************************************************************
- ** *** MOUSE HANDLING AND DRAGGING ************************************
- ** ********************************************************************/
-function mousePressed() {
-    var mouse_pressed_on_empty_space = true;
+function updateValues() {
+    // Update the values of a, b, and c from the sliders
+    a = a_slider.value();
+    b = b_slider.value();
+    c = c_slider.value();
 
-    targets.forEach((target) => {
-        if (dist(target.x, target.y, mouseX, mouseY) < target.width) {
-            target.is_dragged = true;
-            mouse_pressed_on_empty_space = false;
-        }
-    });
-    
-    if (mouse_pressed_on_empty_space) {
-        targets.push(new Target(mouseX, mouseY));
+    // Reset the position for gradient descent
+    x = 2;
+}
+
+//Quadratic function
+//f(x) = ax2 + bx + c
+function costFunction(x) {
+    return (a * x * x + b * x + c);
+};
+
+function drawCostFunction() {
+    // Draw the x and y axes
+    stroke(0);
+    line(0, canvas.getHeight() / 2, canvas.getWidth(), canvas.getHeight() / 2);
+    line(canvas.getWidth() / 2, 0, canvas.getWidth() / 2, canvas.getHeight());
+
+    // Draw the quadratic function
+    noFill();
+    beginShape();
+    for (let x = -canvas.getWidth() / 2; x < canvas.getWidth() / 2; x += 5) {
+        let y = costFunction(x);
+        vertex(x + canvas.getWidth() / 2, -y + canvas.getHeight() / 2);
     }
-}
-function mouseReleased() {
-    targets.forEach((target) => {
-        target.is_dragged = false;
-    });
-}
+    endShape();
+
+    // Draw labels for the axes
+    textSize(12);
+    textAlign(CENTER, CENTER);
+    text("x", canvas.getWidth() - 10, canvas.getHeight() / 2 - 10);
+    text("y", canvas.getWidth() / 2 + 10, 10);
+
+    // Draw a vertex point
+    let vertexX = -b / (2 * a); // x-coordinate of the vertex
+    let vertexY = a * vertexX * vertexX + b * vertexX + c; // y-coordinate of the vertex
+    fill(255, 0, 0);
+    ellipse(vertexX + canvas.getWidth() / 2, -vertexY + canvas.getHeight() / 2, 8, 8);
+};
+
+function drawGradientDescentLine() {
+    // Gradient descent algorithm
+    for (let i = 0; i < 100; i++) {
+        let gradient = 2 * a * x + b; // Calculate the gradient of the cost function
+        x = x - learning_rate * gradient; // Update the value of x
+
+        // Draw a point to visualize the gradient descent
+        let y = costFunction(x);
+        let pos_x = x * 20 + canvas.getWidth() / 2; // Scale and position x for drawing
+        let pos_y = -y * 20 + canvas.getHeight() / 2; // Scale and position y for drawing
+        noStroke();
+        fill(0, 0, 255);
+        ellipse(pos_x, pos_y, 8, 8);
+    }
+};

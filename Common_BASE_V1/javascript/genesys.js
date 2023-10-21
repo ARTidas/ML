@@ -48,7 +48,7 @@ class Genesys {
         ;
     };
 
-    moveTowardsObjectWithGradientDescent(target_object, acceleration = 0) {
+    moveTowardsObject(target_object, acceleration = 0) {
         this.speed += acceleration;
         
         //Calculate the gradient descent step
