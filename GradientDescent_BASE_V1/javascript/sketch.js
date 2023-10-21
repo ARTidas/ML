@@ -50,6 +50,7 @@ function setup() {
 function draw() {
     console.log('Next cycle...');
     //frameRate(1);
+    //frameRate(1);
     background('#ddd');
 
     drawCostFunction();
@@ -66,12 +67,12 @@ function updateValues() {
     c = c_slider.value();
 
     // Reset the position for gradient descent
-    x = 2;
+    x = canvas.getWidth();
     gradient_descent_calculations = [];
 }
 
-//Quadratic function
-//f(x) = ax2 + bx + c
+// Quadratic function
+// f(x) = ax2 + bx + c
 function costFunction(x) {
     return (a * x * x + b * x + c);
 };
