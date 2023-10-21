@@ -120,7 +120,10 @@ function drawLinearRegressionLine() {
     textSize(32);
     stroke('black');
     text(
-        'Coefficient of determination (R-squared, r2): ' + linear_regression_attributes.r2,
+        (
+            'Coefficient of determination (R-squared, r2): ' + 
+            linear_regression_attributes.r2
+        ),
         0,
         0
     );
