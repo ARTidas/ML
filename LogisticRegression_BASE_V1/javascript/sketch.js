@@ -1,39 +1,18 @@
 let canvas = new Canvas();
-let points = [];
-let weights = [0, 0, 0];
-
-const settings = {
-    //Base simulation setup
-    candidate_width: 10,
-    //Hyperparameters
-    learning_rate: 0.000001,
-    number_of_points: 100,
-};
+let data = [];
+let w, b; // Logistic regression parameters
 
 /** ********************************************************************
  ** *** MAIN ENTRY FUNCTION ********************************************
  ** ********************************************************************/
 function setup() {
     canvas.object = createCanvas(
-        canvas.getCanvasWidth(),
-        canvas.getCanvasHeight()
+        canvas.getWidth(),
+        canvas.getHeight()
     );
 
-    //Create initial random data points
-    for (let i = 0; i < settings.number_of_points; i++) {
-        let x = random(canvas.getCanvasWidth());
-        let y = random(canvas.getCanvasHeight());
-        points.push(
-            new Point(
-                x,
-                y,
-                settings.candidate_width,
-                y > f(x) ? 1 : -1
-            )
-        );
-    }
-
-    
+    initializeData();
+    initializeParameters();
 };
 
 /** ********************************************************************
@@ -41,78 +20,64 @@ function setup() {
  ** ********************************************************************/
 function draw() {
     console.log('Next cycle...');
-    //console.log(weights);
-    frameRate(10);
-    //Train the logistic regression model
-    trainLogisticRegression();
-    background('#888');
+    //frameRate(10);
+    background('#ddd');
 
-    for (let point of points) {
-        if (point.is_dragged) {
-            point.x = mouseX;
-            point.y = mouseY;
-        }
-        point.display();
+    // Draw data points
+    for (let point of data) {
+        let x = map(point.x, 0, 1, 0, canvas.getWidth());
+        let y = map(point.y, 0, 1, canvas.getWidth(), 0);
+        let label = point.label;
+        fill((label === 1 ? 'red' : 'blue'));
+        stroke(0);
+        circle(x, y, 10);
     }
 
-    //Display the decision boundary
-    stroke(0);
-    let x1 = 0;
-    let y1 = f(x1);
-    let x2 = canvas.getCanvasWidth();
-    let y2 = f(x2);
-    //console.log(x1, y1, x2, y2);
-    line(x1, y1, x2, y2);
+    // Perform logistic regression
+    logisticRegression();
+}
 
-    //noLoop();
-};
-
-/** ********************************************************************
- ** *** MOUSE HANDLING AND DRAGGING ************************************
- ** ********************************************************************/
-function mousePressed() {
-    var mouse_pressed_on_empty_space = true;
-
-    for (let point of points) {
-        if (dist(point.x, point.y, mouseX, mouseY) < point.width) {
-            point.is_dragged = true;
-            mouse_pressed_on_empty_space = false;
-        }
+function initializeData() {
+    for (let i = 0; i < 200; i++) {
+        let x = random();
+        let y = random();
+        let label = x + y > 1 ? 1 : 0; // Our simple decision boundary
+        data.push({
+            x,
+            y,
+            label
+        });
     }
+}
+
+function initializeParameters() {
+    w = createVector(-1, 1); // Initial weight vector
+    b = 0; // Initial bias
+}
+
+function logisticRegression() {
+    let learning_rate = 0.001;
+  
+    for (let point of data) {
+        let x = createVector(point.x, point.y);
+        let z = w.dot(x) + b;
+        let sigmoid = 1 / (1 + Math.exp(-z));
+        let error = point.label - sigmoid;
     
-    if (mouse_pressed_on_empty_space) {
-        points.push(
-            new Point(
-                mouseX,
-                mouseY,
-                settings.candidate_width,
-                mouseY > f(mouseX) ? 1 : -1
-            )
-        );
+        // Update parameters
+        w.add(x.mult(error * sigmoid * (1 - sigmoid) * learning_rate));
+        b += error * sigmoid * (1 - sigmoid) * learning_rate;
     }
-};
-function mouseReleased() {
-    points.forEach((point) => {
-        point.is_dragged = false;
-    });
-};
-
-//Define the decision boundary (line equation)
-function f(x) {
-    return (-weights[2] + weights[0] * x) / weights[1];
-    //return x * (canvas.getCanvasHeight() / canvas.getCanvasWidth());
+  
+    // Draw decision boundary
+    let x1 = 0;
+    let x2 = 1;
+    let y1 = (-w.x * x1 - b) / w.y;
+    let y2 = (-w.x * x2 - b) / w.y;
+    x1 = map(x1, 0, 1, 0, width);
+    x2 = map(x2, 0, 1, 0, width);
+    y1 = map(y1, 0, 1, height, 0);
+    y2 = map(y2, 0, 1, height, 0);
+    stroke('black');
+    line(x1, y1, x2, y2);
 }
-
-function trainLogisticRegression() {
-    for (let point of points) {
-        let inputs = [point.x, point.y, 1]; //Add bias term
-        let guess = point.sigmoid(point.dot(inputs, weights));
-        let error = point.label - guess;
-        for (let j = 0; j < weights.length; j++) {
-            weights[j] += error * inputs[j] * settings.learning_rate;
-        }
-    }
-}
-
-
-

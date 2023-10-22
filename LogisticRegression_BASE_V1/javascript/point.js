@@ -6,20 +6,20 @@ class Point extends Genesys {
         this.y = y;
         this.width = width;
         this.label = label;
-        this.color = '#000';
+        this.color = 'black';
     }
 
     display() {
         let classification = this.classify();
-        this.color = classification === 1 ? color(255, 0, 0) : color(0, 0, 255);
+        this.color = classification === 1 ? color('red') : color('blue');
         fill(this.color);
         this.object = circle(this.x, this.y, this.width);
     };
 
     classify() {
         let inputs = [this.x, this.y, 1];
-        //console.log(weights);
-        let prediction = this.sigmoid(this.dot(inputs, weights));
+        let prediction = this.sigmoid(this.dot(inputs, weights)); // Use dot product in sigmoid function
+        console.log(prediction);
         return prediction > 0.5 ? 1 : -1;
     }
 
@@ -32,6 +32,7 @@ class Point extends Genesys {
         for (let i = 0; i < a.length; i++) {
             sum += a[i] * b[i];
         }
+
         return sum;
     }
 }

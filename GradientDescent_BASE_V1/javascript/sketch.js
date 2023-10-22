@@ -21,12 +21,12 @@ function setup() {
         canvas.getHeight() - 120
     );
     
-    a_slider = createSlider(-1.1, 2, a, 0.001);
+    a_slider = createSlider(-1.1, 2, a, 0.0001);
     b_slider = createSlider(
         -canvas.getWidth() / 10,
         canvas.getWidth() / 10,
         b,
-        0.01
+        0.0001
     );
     c_slider = createSlider(
         -canvas.getHeight() / 2,
