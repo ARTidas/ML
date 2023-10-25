@@ -12,6 +12,8 @@ const settings = {
     target_search_treshold: 10,
     target_width: 20,
 
+    simulation_max_move_number: 1000,
+
     //kNearestNeighbors:
     knn_k: 3, // Number of nearest neighbors to consider
 

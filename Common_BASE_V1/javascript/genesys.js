@@ -34,10 +34,6 @@ class Genesys {
         return this.object;
     };
 
-    compareFitness(subject_object, target_object) {
-        return subject_object.getFitnessScore() - target_object.getFitnessScore();
-    };
-
     intersects(target_object) {
         return dist(
                 this.x,

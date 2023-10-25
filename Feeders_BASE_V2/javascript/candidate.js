@@ -18,12 +18,12 @@ class Candidate extends Genesys {
             parent_1 !== null && parent_1 !== undefined && 
             parent_2 !== null && parent_2 !== undefined
         ) {
-            offset_x = randomGaussian((parent_1.offset_x + parent_2.offset_x) / 2);
-            offset_y = randomGaussian((parent_1.offset_y + parent_2.offset_y) / 2);
+            offset_x = randomGaussian((parent_1.offset_x + parent_2.offset_x) / 2, maximum / 10);
+            offset_y = randomGaussian((parent_1.offset_y + parent_2.offset_y) / 2, maximum / 10);
         }
         else {
-            var maximum = 0.03;
-            var minimum = -0.03;
+            let maximum = 0.03;
+            let minimum = -0.03;
             offset_x = Math.floor(Math.random() * (maximum - minimum + 1)) + minimum;
             offset_y = Math.floor(Math.random() * (maximum - minimum + 1)) + minimum;
         }
