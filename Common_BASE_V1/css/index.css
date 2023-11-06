@@ -81,3 +81,14 @@ header li {
 .right {
     float: right;
 }
+
+label {
+    vertical-align: top;
+}
+textarea {
+    width: 75%;
+    height: 90%;
+}
+.small_height {
+    height: 100px;
+}
