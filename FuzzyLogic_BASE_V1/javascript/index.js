@@ -1,26 +1,52 @@
 document.addEventListener("DOMContentLoaded", function(event) {
     document.getElementById('calculate')
-        .addEventListener('click', calculateCosineSimilarity);
+        .addEventListener('click', runCosineSimilarity);
     document.getElementById('calculate')
         .addEventListener('click', calculateLevenshteinDistance);
     
     runConsoleTestForTruthEvaluation();
 
-    function calculateCosineSimilarity() {
-        // Read the input
+    function runCosineSimilarity() {
         const input_set_1 = document.getElementById('input_1').value;
         const input_set_2 = document.getElementById('input_2').value;
 
-        // Split the input strings into arrays of words and clean them
-        const words_1 = input_set_1.split(' ').map(word => word.trim());
-        const words_2 = input_set_2.split(' ').map(word => word.trim());
+        let character_similarity = calculateCosineSimilarity(
+            input_set_1.split('').map(string => string.trim()),
+            input_set_2.split('').map(string => string.trim())
+        );
+        let word_similarity = calculateCosineSimilarity(
+            input_set_1.split(' ').map(string => string.trim()),
+            input_set_2.split(' ').map(string => string.trim())
+        );
+        let sentence_similarity = calculateCosineSimilarity(
+            input_set_1.split('.').map(string => string.trim()),
+            input_set_2.split('.').map(string => string.trim())
+        );
 
+        document.getElementById('cosine_similarity_characters').textContent = (
+            character_similarity.toFixed(2) + ' - (' + 
+                (character_similarity.toFixed(2) * 100).toFixed(2) + 
+            '%)'
+        );
+        document.getElementById('cosine_similarity_words').textContent = (
+            word_similarity.toFixed(2) + ' - (' + 
+                (word_similarity.toFixed(2) * 100).toFixed(2) + 
+            '%)'
+        );
+        document.getElementById('cosine_similarity_sentence').textContent = (
+            sentence_similarity.toFixed(2) + ' - (' + 
+                (sentence_similarity.toFixed(2) * 100).toFixed(2) + 
+            '%)'
+        );
+    };
+
+    function calculateCosineSimilarity(set_1, set_2) {
         // Create a set of unique words from both sets
-        const unique_words = new Set([...words_1, ...words_2]);
+        const unique_strings = new Set([...set_1, ...set_2]);
 
         // Create vectors for each set, representing word frequency
-        const vector_1 = Array.from(unique_words).map(word => words_1.includes(word) ? 1 : 0);
-        const vector_2 = Array.from(unique_words).map(word => words_2.includes(word) ? 1 : 0);
+        const vector_1 = Array.from(unique_strings).map(word => set_1.includes(word) ? 1 : 0);
+        const vector_2 = Array.from(unique_strings).map(word => set_2.includes(word) ? 1 : 0);
 
         // Calculate the dot product of the two vectors
         const dot_product = vector_1.reduce((acc, value, index) => acc + value * vector_2[index], 0);
@@ -32,9 +58,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
         // Calculate the cosine similarity
         const similarity = dot_product / (magnitude_1 * magnitude_2);
 
-        // Update display similarity value
-        document.getElementById('cosine_similarity').textContent = similarity.toFixed(3);
-    }
+        return similarity;
+    };
 
     function calculateLevenshteinDistance() {
         // Read the input
@@ -67,8 +92,12 @@ document.addEventListener("DOMContentLoaded", function(event) {
         }
 
         // Update display similarity value
-        document.getElementById('levenshtein_distance').textContent = distances[len_1][len_2];
-    }
+        document.getElementById('levenshtein_distance').textContent = (
+            distances[len_1][len_2] + ' - (' + 
+                ((distances[len_1][len_2] / input_set_1.length) * 100).toFixed(2) + 
+            '%)'
+        );
+    };
 
     function runConsoleTestForTruthEvaluation() {
         const set_1 = [
@@ -99,6 +128,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
                 console.log('--------------------------------');
             }
         }
-    }
+    };
 });
 
