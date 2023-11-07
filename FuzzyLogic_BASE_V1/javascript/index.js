@@ -1,6 +1,10 @@
 document.addEventListener("DOMContentLoaded", function(event) {
-    document.getElementById('calculate_cosine_similarity')
+    document.getElementById('calculate')
         .addEventListener('click', calculateCosineSimilarity);
+    document.getElementById('calculate')
+        .addEventListener('click', calculateLevenshteinDistance);
+    
+    runConsoleTestForTruthEvaluation();
 
     function calculateCosineSimilarity() {
         // Read the input
@@ -19,17 +23,82 @@ document.addEventListener("DOMContentLoaded", function(event) {
         const vector_2 = Array.from(unique_words).map(word => words_2.includes(word) ? 1 : 0);
 
         // Calculate the dot product of the two vectors
-        const dotProduct = vector_1.reduce((acc, value, index) => acc + value * vector_2[index], 0);
+        const dot_product = vector_1.reduce((acc, value, index) => acc + value * vector_2[index], 0);
 
         // Calculate the magnitudes of the vectors
         const magnitude_1 = Math.sqrt(vector_1.reduce((acc, value) => acc + value * value, 0));
         const magnitude_2 = Math.sqrt(vector_2.reduce((acc, value) => acc + value * value, 0));
 
         // Calculate the cosine similarity
-        const similarity = dotProduct / (magnitude_1 * magnitude_2);
+        const similarity = dot_product / (magnitude_1 * magnitude_2);
 
         // Update display similarity value
         document.getElementById('cosine_similarity').textContent = similarity.toFixed(3);
+    }
+
+    function calculateLevenshteinDistance() {
+        // Read the input
+        const input_set_1 = document.getElementById('input_1').value;
+        const input_set_2 = document.getElementById('input_2').value;
+
+        const len_1 = input_set_1.length;
+        const len_2 = input_set_2.length;
+    
+        // Create a 2D array to store the distances
+        const distances = [];
+    
+        for (let i = 0; i <= len_1; i++) {
+            distances[i] = [i];
+        }
+    
+        for (let j = 0; j <= len_2; j++) {
+            distances[0][j] = j;
+        }
+    
+        for (let i = 1; i <= len_1; i++) {
+            for (let j = 1; j <= len_2; j++) {
+                const cost = input_set_1[i - 1] === input_set_2[j - 1] ? 0 : 1;
+                distances[i][j] = Math.min(
+                    distances[i - 1][j] + 1,       // Deletion
+                    distances[i][j - 1] + 1,       // Insertion
+                    distances[i - 1][j - 1] + cost // Substitution
+                );
+            }
+        }
+
+        // Update display similarity value
+        document.getElementById('levenshtein_distance').textContent = distances[len_1][len_2];
+    }
+
+    function runConsoleTestForTruthEvaluation() {
+        const set_1 = [
+            true,
+            false,
+        ];
+        const set_2 = [
+            undefined,
+            null,
+            'zero',
+            'true',
+            'false',
+            0,
+            1,
+            true,
+            false,
+            '0',
+            '1',
+            'true',
+            'false',
+        ];
+        for (let base of set_1) {
+            for (let comparison of set_2) {
+                //console.log(JSON.stringify(base), JSON.stringify(comparison), base == comparison);
+                console.log(base);
+                console.log(comparison);
+                console.log(base == comparison);
+                console.log('--------------------------------');
+            }
+        }
     }
 });
 
