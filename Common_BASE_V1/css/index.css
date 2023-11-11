@@ -28,6 +28,20 @@ iframe {
     margin: 10px;
 }
 
+#map {
+    height: 86vh;
+    width: 78vw;
+    border: 1px solid #000;
+    margin: auto;
+    margin: 10px;
+    float: left;
+}
+#map_log {
+    width: 17vw;
+    float: right;
+    font-size: 10px;
+    margin-left: 0px;
+}
 
 header {
     font-size: 18px;
