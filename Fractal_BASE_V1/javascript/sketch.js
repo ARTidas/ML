@@ -2,49 +2,33 @@ let canvas = new Canvas();
 
 // Project variables
 let trianglePoints = [];
-let a = 1; // Coefficient of x^2
-let b = 2; // Coefficient of x
-let c = 1; // Constant
-
-let a_slider, b_slider, c_slider;
+let angle_slider, global_angle_slider, scaling_factor_slider;
 
 /** ********************************************************************
  ** *** MAIN ENTRY FUNCTION ********************************************
  ** ********************************************************************/
 function setup() {
+    frameRate(10);
+
     canvas.object = createCanvas(
         canvas.getWidth(),
         canvas.getHeight() - 120
     );
-    
-    a_slider = createSlider(-1.1, 2, a, 0.0001);
-    b_slider = createSlider(
-        -canvas.getWidth() / 10,
-        canvas.getWidth() / 10,
-        b,
-        0.0001
-    );
-    c_slider = createSlider(
-        -canvas.getHeight() / 2,
-        canvas.getHeight() / 2,
-        c,
-        0.1
-    );
 
-    a_slider.position(20, canvas.getHeight() - 120 + 20);
-    b_slider.position(20, canvas.getHeight() - 120 + 50);
-    c_slider.position(20, canvas.getHeight() - 120 + 80);
+    angle_slider = createSlider(0, PI, PI / 4, 0.01); // Slider for adjusting angle
+    angle_slider.size(canvas.getWidth() - 20 - 200);
+    angle_slider.position(200, canvas.getHeight() - 120 + 20);
+    createP("Angle:").position(20, canvas.getHeight() - 120 - 15);
 
-    a_slider.input(updateValues);
-    b_slider.input(updateValues);
-    c_slider.input(updateValues);
+    global_angle_slider = createSlider(0, PI, 0, 0.01); // Slider for adjusting global angle
+    global_angle_slider.size(canvas.getWidth() - 20 - 200);
+    global_angle_slider.position(200, canvas.getHeight() - 120 + 50);
+    createP("Global Angle:").position(20, canvas.getHeight() - 120 + 15);
 
-    // Initial vertices of an equilateral triangle
-    let p1 = createVector(canvas.getWidth() / 2, (canvas.getHeight() - 120) - 50);
-    let p2 = createVector(canvas.getWidth() / 4, (canvas.getHeight() - 120) / 4);
-    let p3 = createVector((3 * canvas.getWidth()) / 4, (canvas.getHeight() - 120) / 4);
-    
-    trianglePoints = [p1, p2, p3];
+    scaling_factor_slider = createSlider(0, 0.8, 0.67, 0.01); // Slider for adjusting scaling factor
+    scaling_factor_slider.size(canvas.getWidth() - 20 - 200);
+    scaling_factor_slider.position(200, canvas.getHeight() - 120 + 80);
+    createP("Scaling Factor:").position(20, canvas.getHeight() - 120 + 45);
     
     //noLoop();
 };
@@ -54,36 +38,29 @@ function setup() {
  ** ********************************************************************/
 function draw() {
     console.log('Next cycle...');
-    frameRate(3);
     background('#ddd');
 
     stroke(0);
-    fill(0, 0, 0);
-    drawTriangle(trianglePoints, 5);
+    translate(canvas.getWidth() / 2, canvas.getHeight() - 120);
+    branch((canvas.getHeight() - 120) / 3);
 
     //noLoop();
 };
 
-//Sierpinski Triangle
-function drawTriangle(points, depth) {
-    if (depth === 0) {
-        triangle(points[0].x, points[0].y, points[1].x, points[1].y, points[2].x, points[2].y);
-    } else {
-        // Calculate midpoints of the sides
-        let mid1 = createVector((points[0].x + points[1].x) / 2, (points[0].y + points[1].y) / 2);
-        let mid2 = createVector((points[1].x + points[2].x) / 2, (points[1].y + points[2].y) / 2);
-        let mid3 = createVector((points[2].x + points[0].x) / 2, (points[2].y + points[0].y) / 2);
+function branch(len) {
+    // Recursive function to draw branches of the fractal tree
+    line(0, 0, 0, -len);
+    translate(0, -len);
 
-        // Recursively draw smaller triangles
-        drawTriangle([points[0], mid1, mid3], depth - 1);
-        drawTriangle([mid1, points[1], mid2], depth - 1);
-        drawTriangle([mid3, mid2, points[2]], depth - 1);
+    if (len > 4) {
+        push();
+        rotate(angle_slider.value() + global_angle_slider.value()); // Rotate to the right
+        branch(len * scaling_factor_slider.value()); // Recursive call
+        pop();
+
+        push();
+        rotate(-angle_slider.value() + global_angle_slider.value()); // Rotate to the left
+        branch(len * scaling_factor_slider.value()); // Recursive call
+        pop();
     }
-}
-
-function updateValues() {
-    // Update the values of a, b, and c from the sliders
-    a = a_slider.value();
-    b = b_slider.value();
-    c = c_slider.value();
 }
