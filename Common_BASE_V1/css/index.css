@@ -9,6 +9,7 @@ body {
     min-height: 100%;
     margin: auto;
     font-size: 28px;
+    font-family: sans-serif, Arial, Helvetica;
 }
 body div {
     margin-left: 5px;
@@ -105,4 +106,8 @@ textarea {
 }
 .small_height {
     height: 100px;
+}
+
+p {
+    font-size: 0.65em;
 }
