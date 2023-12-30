@@ -16,10 +16,18 @@ body div {
     margin-right: 5px;
 }
 
-iframe {
+#menu {
     display: block; /* iframes are inline by default */
-    width: 98vw;    /* Viewport-relative units */
-    height: 86vh;
+    width: 10vw;    /* Viewport-relative units */
+    height: 90vh;
+    border: none;
+    float: left;
+    font-size: 0.8em;
+}
+iframe[name="frame"] {
+    display: block; /* iframes are inline by default */
+    width: 86vw;    /* Viewport-relative units */
+    height: 90vh;
     border: none;
 }
 
@@ -69,9 +77,12 @@ h2 {
 
 ol {
     margin: 0px;
+    padding: 0px;
+    padding-left: 20px;
+    padding-top: 10px;
 }
 li {
-    font-size: 1em;
+    font-size: 0.6em;
 }
 header li {
     float: left;
