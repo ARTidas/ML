@@ -19,7 +19,7 @@ body div {
 #menu {
     display: block; /* iframes are inline by default */
     width: 10vw;    /* Viewport-relative units */
-    height: 90vh;
+    height: 88vh;
     border: none;
     float: left;
     font-size: 0.8em;
@@ -27,7 +27,7 @@ body div {
 iframe[name="frame"] {
     display: block; /* iframes are inline by default */
     width: 86vw;    /* Viewport-relative units */
-    height: 90vh;
+    height: 88vh;
     border: none;
 }
 
