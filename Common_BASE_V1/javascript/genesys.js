@@ -84,6 +84,10 @@ class Genesys {
         );
     };
 
+    getRandomDirection() {
+        return Math.random() < 0.5 ? 1 : -1;
+    }
+
     findKNearestNeighbors(targets, k = settings.knn_k) {
         return (
             targets.sort(
