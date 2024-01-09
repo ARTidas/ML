@@ -15,7 +15,7 @@ const settings = {
 let robots = [];
 let data = {
     x: [],
-    //y: [],
+    y: [],
     //z: [],
 };
 
@@ -47,12 +47,13 @@ function draw() {
     background('#ddd');
 
     data.x = [];
-    //data.y = [];
+    data.y = [];
     //data.z = [];
 
     for (let robot of robots) {
         robot.move();
         data.x.push(robot.x);
+        data.y.push(robot.y);
     }
 
     drawHistogram();
@@ -66,32 +67,40 @@ function draw() {
 }
 
 function drawHistogram() {
-    let number_of_bins = makeNumberOdd(int(canvas.getWidth() / settings.movement_speed)); // This defines the number of bins
-    let histogram = Array(number_of_bins).fill(0);
+    let x_number_of_bins = int(canvas.getWidth() / settings.movement_speed);
+    let y_number_of_bins = int(canvas.getHeight() / settings.movement_speed);
+
+    let x_histogram = Array(x_number_of_bins).fill(0);
+    let y_histogram = Array(y_number_of_bins).fill(0);
 
     for (let value of data.x) {
-        //histogram[int(map(value, min(data.x), max(data.x), 0, number_of_bins))]++;
-        histogram[int(map(value, 0, canvas.getWidth(), 0, number_of_bins))]++;
+        x_histogram[int(map(value, 0, canvas.getWidth(), 0, x_number_of_bins))]++;
     }
-    for (let i = 0; i < number_of_bins; i++) {
+    for (let value of data.y) {
+        y_histogram[int(map(value, 0, canvas.getHeight(), 0, y_number_of_bins))]++;
+    }
+
+    for (let i = 0; i < x_number_of_bins; i++) {
         fill('#fff');
         strokeWeight(1);
-        //let column_height = map(histogram[i], 0, settings.number_of_robots, 0, -canvas.getHeight() / 2)
-        let column_height = map(log(histogram[i] + 1), 0, log(settings.number_of_robots), 0, canvas.getHeight() / 2);
+        let column_height = map(log(x_histogram[i] + 1), 0, log(settings.number_of_robots), 0, canvas.getHeight() / 2);
         rect(
             //(i * settings.movement_speed) + (settings.robot_width / 2) - 1.5,
             (i * settings.movement_speed) + (settings.movement_speed / 2),
-            canvas.getHeight() / 2,
+            canvas.getHeight(),
             settings.robot_width,
             -column_height
         );
     }
-}
-
-function makeNumberOdd(number) {
-    if (number % 2 === 0) {
-        return number - 1; // Subtract one if the number is even
-    } else {
-        return number; // Leave it alone if the number is odd
+    for (let i = 0; i < y_number_of_bins; i++) {
+        fill('#fff');
+        strokeWeight(1);
+        let column_width = map(log(y_histogram[i] + 1), 0, log(settings.number_of_robots), 0, canvas.getWidth() / 2);
+        rect(
+            canvas.getWidth(),
+            (i * settings.movement_speed) + (settings.movement_speed / 2),
+            -column_width,
+            settings.robot_width
+        );
     }
 }

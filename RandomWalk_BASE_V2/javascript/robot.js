@@ -8,8 +8,9 @@ class Robot extends Genesys {
         this.color = settings.robot_color;
     };
 
-    // 1D movement
+    // 2D movement
     move() {
         this.x += this.getRandomDirection() * settings.movement_speed
+        this.y += this.getRandomDirection() * settings.movement_speed
     }
 };
