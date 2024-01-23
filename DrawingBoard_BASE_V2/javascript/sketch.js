@@ -7,9 +7,13 @@ let stroke_weight_slider;
  ** *** MAIN ENTRY FUNCTION ********************************************
  ** ********************************************************************/
 function setup() {
-    canvas.object = createCanvas(
+    let shortest_canvas_side= min(
         canvas.getWidth(),
         canvas.getHeight() - slider_space_height
+    )
+    canvas.object = createCanvas(
+        shortest_canvas_side,
+        shortest_canvas_side
     );
 
     stroke_weight_slider = createSlider(0, 80, 30, 1); // Slider for adjusting angle
