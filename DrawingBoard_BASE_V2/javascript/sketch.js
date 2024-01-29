@@ -1,11 +1,11 @@
 let canvas = new Canvas();
 
-let slider_space_height = 40 * 1;
-let stroke_weight_slider;
+let slider_space_height = 40 * 2;
+let stroke_weight_slider, scale_slider;
 
 const origin_x = canvas.getWidth() / 2;
 const origin_y = (canvas.getHeight() - slider_space_height) / 2;
-const scale = 10;
+let scale = 40;
 
 /** ********************************************************************
  ** *** MAIN ENTRY FUNCTION ********************************************
@@ -16,11 +16,16 @@ function setup() {
         canvas.getHeight() - slider_space_height
     );
 
-    //stroke_weight_slider = createSlider(0, 120, 60, 1); // Slider for adjusting the stroke width
     stroke_weight_slider = createSlider(0, 120, 10, 1);
-    stroke_weight_slider.size(canvas.getWidth() - 20 - 200);
+    stroke_weight_slider.size(canvas.getWidth() - 20 - 400);
     stroke_weight_slider.position(200, canvas.getHeight() - slider_space_height + 20);
     createP("Stroke weight:").position(20, canvas.getHeight() - slider_space_height);
+
+    scale_slider = createSlider(1, 70, 10, 1);
+    scale_slider.size(canvas.getWidth() - 20 - 400);
+    scale_slider.position(200, canvas.getHeight() - slider_space_height + 60);
+    createP("Scale:").position(20, canvas.getHeight() - slider_space_height + 40);
+    scale_slider.input(clearCanvas);
 
     background('#fff');
     strokeWeight(stroke_weight_slider.value());
@@ -59,18 +64,17 @@ function drawFunction() {
     stroke('#00f');
     beginShape();
     for (let x = -origin_x; x < origin_x; x += scale) {
-        let y = costFunction(x);
-        vertex(x + origin_x, -y + origin_y);
+        vertex(
+            origin_x + x,
+            origin_y - getValueForFunction(x)
+        );
     }
     endShape();
 }
-function costFunction(x) {
-    let a = 1;
-    let b = 1;
-    let c = 0;
 
-    //return (a * x * x + b * x + c);
-    return (x);
+function getValueForFunction(x) {
+    //return (x);
+    return (x - (5 * scale));
 };
 
 function drawCoordinateSystem() {
@@ -122,7 +126,12 @@ function drawArrow(x, y, length, size, direction = null) {
 
 function drawScales(scale) {
     for (let i = 0; i < ((canvas.getWidth() / scale) / 2); i++) {
-        strokeWeight(1);
+        if (i % 5 === 0 && i !== 0) {
+            strokeWeight(2);
+        }
+        else {
+            strokeWeight(1);
+        }
         stroke('#ccc');
         line(
             origin_x + i * scale,
@@ -139,7 +148,12 @@ function drawScales(scale) {
     }
 
     for (let i = 0; i < ((canvas.getWidth() / scale) / 2); i++) {
-        strokeWeight(1);
+        if (i % 5 === 0 && i !== 0) {
+            strokeWeight(2);
+        }
+        else {
+            strokeWeight(1);
+        }
         stroke('#ccc');
         line(
             0,
@@ -248,6 +262,7 @@ function keyPressed() {
 }
 
 function clearCanvas() {
+    scale = scale_slider.value();
     clear();
     background('#fff');
     stroke('#000');
