@@ -5,26 +5,19 @@ let stroke_weight_slider;
 
 const origin_x = canvas.getWidth() / 2;
 const origin_y = (canvas.getHeight() - slider_space_height) / 2;
+const scale = 10;
 
 /** ********************************************************************
  ** *** MAIN ENTRY FUNCTION ********************************************
  ** ********************************************************************/
 function setup() {
-    /*let shortest_canvas_side= min(
-        canvas.getWidth(),
-        canvas.getHeight() - slider_space_height
-    )
-    canvas.object = createCanvas(
-        shortest_canvas_side,
-        shortest_canvas_side
-    );*/
     canvas.object = createCanvas(
         canvas.getWidth(),
         canvas.getHeight() - slider_space_height
     );
 
     //stroke_weight_slider = createSlider(0, 120, 60, 1); // Slider for adjusting the stroke width
-    stroke_weight_slider = createSlider(0, 120, 30, 1);
+    stroke_weight_slider = createSlider(0, 120, 10, 1);
     stroke_weight_slider.size(canvas.getWidth() - 20 - 200);
     stroke_weight_slider.position(200, canvas.getHeight() - slider_space_height + 20);
     createP("Stroke weight:").position(20, canvas.getHeight() - slider_space_height);
@@ -33,6 +26,7 @@ function setup() {
     strokeWeight(stroke_weight_slider.value());
     noFill();
     stroke('#000');
+    drawCoordinateSystem();
 
     const clear_canvas_button = document.getElementById('clear_canvas_button');
     clear_canvas_button.addEventListener('click', clearCanvas);
@@ -47,9 +41,10 @@ function draw() {
     console.log('Next cycle...');
     //frameRate(20);
 
-    drawCoordinateSystem();
-    strokeWeight(stroke_weight_slider.value());
+    drawFunction();
 
+    strokeWeight(stroke_weight_slider.value());
+    stroke('#0f0');
     if (mouseIsPressed) {
         line(pmouseX, pmouseY, mouseX, mouseY);
     }
@@ -58,16 +53,45 @@ function draw() {
 }
 
 
+function drawFunction() {
+    noFill();
+    strokeWeight(1);
+    stroke('#00f');
+    beginShape();
+    for (let x = -origin_x; x < origin_x; x += scale) {
+        let y = costFunction(x);
+        vertex(x + origin_x, -y + origin_y);
+    }
+    endShape();
+}
+function costFunction(x) {
+    let a = 1;
+    let b = 1;
+    let c = 0;
+
+    //return (a * x * x + b * x + c);
+    return (x);
+};
+
 function drawCoordinateSystem() {
     //noStroke();
+    noFill();
     strokeWeight(1);
 
+    drawScales(scale);
+
     line(origin_x, 0, origin_x, canvas.getHeight());
-    drawArrow(canvas.getWidth(), origin_y, 10, 3, 'right');
-    drawScales(10);
+    drawArrow(canvas.getWidth(), origin_y, scale, 3, 'right');
     
     line(0, origin_y, canvas.getWidth(), origin_y);
-    drawArrow(origin_x, 0, 10, 3, 'up');
+    drawArrow(origin_x, 0, scale, 3, 'up');
+
+    textSize(scale * 1.5);
+    fill('#000');
+    strokeWeight(0);
+    textAlign(CENTER, CENTER);
+    text("X", canvas.getWidth() - scale, origin_y + scale);
+    text("Y", origin_x - scale, scale);
 }
 
 function drawArrow(x, y, length, size, direction = null) {
@@ -98,32 +122,121 @@ function drawArrow(x, y, length, size, direction = null) {
 
 function drawScales(scale) {
     for (let i = 0; i < ((canvas.getWidth() / scale) / 2); i++) {
+        strokeWeight(1);
+        stroke('#ccc');
         line(
             origin_x + i * scale,
-            origin_y - scale / 2,
+            0,
             origin_x + i * scale,
-            origin_y + scale / 2
+            canvas.getWidth()
         );
         line(
             origin_x - i * scale,
-            origin_y - scale / 2,
+            0,
             origin_x - i * scale,
-            origin_y + scale / 2
+            canvas.getWidth()
         );
     }
-    for (let i = 0; i < (((canvas.getHeight() - slider_space_height) / scale) / 2); i++) {
+
+    for (let i = 0; i < ((canvas.getWidth() / scale) / 2); i++) {
+        strokeWeight(1);
+        stroke('#ccc');
         line(
-            origin_x + scale / 2,
+            0,
             origin_y + i * scale,
-            origin_x - scale / 2,
+            canvas.getWidth(),
             origin_y + i * scale
         );
         line(
-            origin_x + scale / 2,
+            0,
             origin_y - i * scale,
-            origin_x - scale / 2,
+            canvas.getWidth(),
             origin_y - i * scale
         );
+    }
+
+    for (let i = 0; i < ((canvas.getWidth() / scale) / 2) - 1; i++) {
+        if (i % 5 === 0 && i !== 0) {
+            fill('#000');
+            strokeWeight(0);
+            stroke('#000');
+            textSize(scale * 1.5);
+            textAlign(CENTER, CENTER);
+            text(i, origin_x + i * scale, origin_y + scale * 2);
+            text(-i, origin_x - i * scale, origin_y + scale * 2);
+
+            strokeWeight(1);
+            line(
+                origin_x + i * scale,
+                origin_y - scale,
+                origin_x + i * scale,
+                origin_y + scale
+            );
+            line(
+                origin_x - i * scale,
+                origin_y - scale,
+                origin_x - i * scale,
+                origin_y + scale
+            );
+        }
+        else {
+            strokeWeight(1);
+            stroke('#000');
+            line(
+                origin_x + i * scale,
+                origin_y - scale / 2,
+                origin_x + i * scale,
+                origin_y + scale / 2
+            );
+            line(
+                origin_x - i * scale,
+                origin_y - scale / 2,
+                origin_x - i * scale,
+                origin_y + scale / 2
+            );
+        }
+    }
+
+    for (let i = 0; i < (((canvas.getHeight() - slider_space_height) / scale) / 2) - 1; i++) {
+        if (i % 5 === 0 && i !== 0) {
+            fill('#000');
+            strokeWeight(0);
+            stroke('#000');
+            textSize(scale * 1.5);
+            textAlign(CENTER, CENTER);
+            text(i, origin_x - scale * 2, origin_y - i * scale);
+            text(-i, origin_x - scale * 2, origin_y + i * scale);
+
+            strokeWeight(1);
+            line(
+                origin_x + scale,
+                origin_y + i * scale,
+                origin_x - scale,
+                origin_y + i * scale
+            );
+            line(
+                origin_x + scale,
+                origin_y - i * scale,
+                origin_x - scale,
+                origin_y - i * scale
+            );
+        }
+        else {
+            strokeWeight(1);
+            stroke('#000');
+            line(
+                origin_x + scale / 2,
+                origin_y + i * scale,
+                origin_x - scale / 2,
+                origin_y + i * scale
+            );
+            line(
+                origin_x + scale / 2,
+                origin_y - i * scale,
+                origin_x - scale / 2,
+                origin_y - i * scale
+            );
+        }
     }
 }
 
@@ -138,13 +251,15 @@ function clearCanvas() {
     clear();
     background('#fff');
     stroke('#000');
+    drawCoordinateSystem();
 }
 
 function saveDrawing() {
     //saveCanvas(canvas.object, 'canvas_drawing_' + Date.now(), 'png');
 
     // Create a new off-screen canvas with the desired size (28x28 pixels)
-    let resizedCanvas = createGraphics(28, 28);
+    //let resizedCanvas = createGraphics(28, 28);
+    let resizedCanvas = createGraphics(canvas.getWidth(), (canvas.getHeight() - slider_space_height));
     // Draw the original canvas onto the new off-screen canvas, rescaled
     resizedCanvas.image(canvas.object, 0, 0, resizedCanvas.width, resizedCanvas.height);
     // Save the resized canvas
