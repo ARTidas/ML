@@ -5,7 +5,7 @@ let stroke_weight_slider, scale_slider;
 
 const origin_x = canvas.getWidth() / 2;
 const origin_y = (canvas.getHeight() - slider_space_height) / 2;
-let scale = 40;
+let scale = 10;
 
 /** ********************************************************************
  ** *** MAIN ENTRY FUNCTION ********************************************
