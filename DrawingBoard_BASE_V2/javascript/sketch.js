@@ -62,11 +62,23 @@ function drawFunction() {
     noFill();
     strokeWeight(1);
     stroke('#00f');
+
     beginShape();
-    for (let x = -origin_x; x < origin_x; x += scale) {
+    //for (let x = -origin_x; x < origin_x; x += scale) {
+    for (let x = -origin_x; x < origin_x; x++) {
         vertex(
             origin_x + x,
             origin_y - getValueForFunction(x)
+        );
+    }
+    endShape();
+
+    beginShape();
+    //for (let x = -origin_x; x < origin_x; x += scale) {
+    for (let x = -origin_x; x < origin_x; x++) {
+        vertex(
+            origin_x + x,
+            origin_y - getValueForFunction2(x)
         );
     }
     endShape();
@@ -74,8 +86,19 @@ function drawFunction() {
 
 function getValueForFunction(x) {
     //return (x);
-    return (x - (5 * scale));
+    //return (x - (5 * scale));
+    //return x * 2;
+    return x / 2;
+    //return (Math.pow(x, 2) / scale);
 };
+function getValueForFunction2(x) {
+    //return (x);
+    //return (x - (5 * scale));
+    return x * 2;
+    //return x / 2;
+    //return (Math.pow(x, 2) / scale);
+};
+
 
 function drawCoordinateSystem() {
     //noStroke();
