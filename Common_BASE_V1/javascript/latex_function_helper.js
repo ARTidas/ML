@@ -40,32 +40,13 @@ class LatexFunctionHelper {
             // Create the JavaScript expression for each term
             const js_expression = terms.map(term => {
                 //if (term.match(/x\^{([0-9.\/]+)}/g)) {
-                if (term.match(new RegExp(`${input_variable}\\^{([0-9.\/]+)}`))) {
-                    // Handle specific case like 2^{0.5}
-                    //return term.replace(new RegExp(`${input_variable}\\^{([0-9.]+)}`), `(Math.pow(${input_variable}, $1) * ${scale_variable})`);
-                    //return term.replace(new RegExp(`${input_variable}\\^{([0-9.\/]+)}`), `(Math.pow(${input_variable} * ${scale_variable}, $1))`);
-                    const exponent = parseInt(
-                        term.match(
-                            new RegExp(`${input_variable}\\^{([0-9.\/]+)}`)
-                        )[1]
-                    );
-
-                    if (exponent === 1) {
-                        return term.replace(new RegExp(`${input_variable}\\^{([0-9.\/]+)}`), `(Math.pow(${input_variable}, $1))`);
-                    }
-                    else if (exponent === 0) {
-                        return term.replace(new RegExp(`${input_variable}\\^{([0-9.\/]+)}`), `(Math.pow(${input_variable}, $1) * ${scale_variable})`);
-                    }
-                    else if (exponent > 1) {
-                        //return term.replace(new RegExp(`${input_variable}\\^{([0-9.\/]+)}`), `(Math.pow(${input_variable}, $1) / ${scale_variable})`);
-                        return term.replace(new RegExp(`${input_variable}\\^{([0-9.\/]+)}`), `(Math.pow(${input_variable}, $1) / (Math.pow(${scale_variable}, ($1 - 1))))`);
-                    }
-
-                    return term.replace(new RegExp(`${input_variable}\\^{([0-9.\/]+)}`), `(Math.pow(${input_variable} * ${scale_variable}, $1))`);
+                if (term.match(new RegExp(`${input_variable}\\^{([0-9.]+)}`))) {
+                    // Handle specific case like x^{0.5}
+                    return term.replace(new RegExp(`${input_variable}\\^{([0-9.]+)}`), `(Math.pow(${input_variable}, $1) / (Math.pow(${scale_variable}, ($1 - 1))))`);
                 }
                 else if (term.includes(input_variable + '^')) {
                     // Handle terms with x^2, x^3, etc.
-                    return term.replace(new RegExp(`${input_variable}\\^([0-9.]+)`), `(Math.pow(${input_variable}, $1) / ${scale_variable})`);
+                    return term.replace(new RegExp(`${input_variable}\\^([0-9.]+)`), `(Math.pow(${input_variable}, $1) / (Math.pow(${scale_variable}, ($1 - 1))))`);
                 }
                 else if (term.includes(input_variable)) {
                     // Handle terms with x
