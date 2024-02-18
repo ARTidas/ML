@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
             for (let j = 0; j < a_values.length; j++) {
                 for (let k = 0; k < n_values.length; k++) {
                     content += (
-                        (++counter + '.: ') + 
+                        //(++counter + '.: ') + 
                         (signum_values[i] + a_values[j] + 'x^{' + n_values[k] + '}' + "<br/>")
                     );
                 }
@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
         for (let i = 0; i < signum_values.length; i++) {
             for (let j = 0; j < b_values.length; j++) {
                 content += (
-                    (++counter + '.: ') + 
+                    //(++counter + '.: ') + 
                     (signum_values[i] + b_values[j] + 'x' + "<br/>")
                 );
             }
@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
         for (let i = 0; i < signum_values.length; i++) {
             for (let j = 0; j < c_values.length; j++) {
                 content += (
-                    (++counter + '.: ') + 
+                    //(++counter + '.: ') + 
                     (signum_values[i] + c_values[j] + "<br/>")
                 );
             }
@@ -65,7 +65,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
                         for (let m = 0; m < signum_values.length; m++) {
                             for (let n = 0; n < b_values.length; n++) {
                                 content += (
-                                    (++counter + '.: ') + 
+                                    //(++counter + '.: ') + 
                                     (signum_values[i] + a_values[j] + 'x^{' + n_values[k] + '}') +
                                     (operation_values[l]) +
                                     (signum_values[m] + b_values[n] + 'x' + "<br/>")
@@ -87,7 +87,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
                         for (let m = 0; m < signum_values.length; m++) {
                             for (let n = 0; n < c_values.length; n++) {
                                 content += (
-                                    (++counter + '.: ') + 
+                                    //(++counter + '.: ') + 
                                     (signum_values[i] + a_values[j] + 'x^{' + n_values[k] + '}') +
                                     (operation_values[l]) +
                                     (signum_values[m] + c_values[n] + "<br/>")
@@ -108,7 +108,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
                     for (let l = 0; l < signum_values.length; l++) {
                         for (let m = 0; m < c_values.length; m++) {
                             content += (
-                                (++counter + '.: ') + 
+                                //(++counter + '.: ') + 
                                 (signum_values[i] + b_values[j] + 'x') + 
                                 (operation_values[k]) +
                                 (signum_values[l] + c_values[m] + "<br/>")
@@ -132,7 +132,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
                                     for (let p = 0; p < signum_values.length; p++) {
                                         for (let q = 0; q < c_values.length; q++) {
                                             content += (
-                                                (++counter + '.: ') + 
+                                                //(++counter + '.: ') + 
                                                 (signum_values[i] + a_values[j] + 'x^{' + n_values[k] + '}') +
                                                 (operation_values[l]) +
                                                 (signum_values[m] + b_values[n] + 'x') +
