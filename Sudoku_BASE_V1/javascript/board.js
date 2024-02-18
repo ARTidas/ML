@@ -8,6 +8,8 @@ class Board {
     }
 
     display() {
+        document.getElementById("game_board").innerHTML = "";
+
         const game_panel = document.createElement("div");
         game_panel.style.width = this.game_frame_width + "px";
         game_panel.style.height = this.game_frame_height + "px";
@@ -16,7 +18,8 @@ class Board {
         game_panel.style.display = "grid";
         game_panel.style.gridTemplateRows = `repeat(${this.game_size}, 1fr)`;
         game_panel.style.gridTemplateColumns = `repeat(${this.game_size}, 1fr)`;
-        document.body.appendChild(game_panel);
+        //document.body.appendChild(game_panel);
+        document.getElementById("game_board").appendChild(game_panel);
 
         for (let i = 0; i < this.game_size; i++) {
             for (let j = 0; j < this.game_size; j++) {

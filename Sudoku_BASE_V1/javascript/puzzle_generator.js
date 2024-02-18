@@ -1,88 +1,106 @@
 class PuzzleGenerator {
     constructor(game_size) {
+        this.iteration_counter = 0;
         this.game_size = game_size;
-        this.game_puzzle_solution = new Array((this.game_size * this.game_size) + 1)
+        this.game_puzzle_solution = new Array(game_size * game_size + 1)
             .fill(0)
-            .map(() => new Array((this.game_size * this.game_size) + 1).fill(0));
+            .map(() => new Array(game_size * game_size + 1).fill(0));
         
         if (!this.generatePuzzle()) {
             throw new Error("Sorry, failed to generate a playable sudoku board...");
         }
+
+        document.getElementById("iteration_counter").innerHTML = (
+            "It took " + this.iteration_counter + " recursive iterations to generate the puzzle."
+        );
     }
 
     generatePuzzle() {
-        for (let bruteforce_iterations = 0; bruteforce_iterations < 100000; bruteforce_iterations++) {
-            if (this.generatePuzzleSolution(this.game_puzzle_solution)) {
-                return true;
-            }
-        }
-
-        return false;
+        return this.populatePuzzle(1, 1);
     }
 
-    generatePuzzleSolution(game_puzzle_solution) {
-        const available_values = Array.from({ length: (this.game_size * this.game_size) + 1 }, () =>
-            Array.from({ length: (this.game_size * this.game_size) + 1 }, () =>
-                Array.from({ length: (this.game_size * this.game_size) }, (_, index) => index + 1)
-            )
-        );
+    populatePuzzle(row, column) {
+        this.iteration_counter++;
+        
+        if (row > this.game_size * this.game_size) {
+            return true; // Reached the end
+        }
 
-        for (let row_index = 1; row_index <= (this.game_size * this.game_size); row_index++) {
-            for (let column_index = 1; column_index <= (this.game_size * this.game_size); column_index++) {
-                let recursive_iteration_counter = 0;
-                const choosen_random_number = this.chooseNumberforField(
-                    row_index,
-                    column_index,
-                    available_values,
-                    ++recursive_iteration_counter
-                );
+        let next_row = row;
+        let next_column = column + 1;
+        if (next_column > this.game_size * this.game_size) {
+            next_row++;
+            next_column = 1;
+        }
 
-                game_puzzle_solution[row_index][column_index] = choosen_random_number;
+        if (this.game_puzzle_solution[row][column] !== 0) {
+            return this.populatePuzzle(next_row, next_column); // Move to the next cell
+        }
 
-                for (let index = 1; index <= (this.game_size * this.game_size); index++) {
-                    available_values[index][column_index] = available_values[index][column_index].filter(value => value !== choosen_random_number);
-                    available_values[row_index][index] = available_values[row_index][index].filter(value => value !== choosen_random_number);
+        const values = this.shuffleValues(); // Shuffle possible values for randomness
+        for (let value of values) {
+            if (this.isValidMove(row, column, value)) {
+                this.game_puzzle_solution[row][column] = value;
+                if (this.populatePuzzle(next_row, next_column)) {
+                    return true; // Move to the next cell
                 }
 
-                for (let subrow_index = (this.game_size - 1); subrow_index >= 0; subrow_index--) {
-                    for (let subcolumn_index = (this.game_size - 1); subcolumn_index >= 0; subcolumn_index--) {
-                        const row_coordinates = Math.ceil(row_index / this.game_size) * this.game_size - subrow_index;
-                        const column_coordinates = Math.ceil(column_index / this.game_size) * this.game_size - subcolumn_index;
-
-                        available_values[row_coordinates][column_coordinates] = (
-                            available_values[row_coordinates][column_coordinates]
-                                .filter(value => value !== choosen_random_number)
-                        );
-                    }
-                }
+                // Backtrack if no solution found
+                this.game_puzzle_solution[row][column] = 0;
             }
         }
 
-        for (let row_index = 1; row_index <= (this.game_size * this.game_size); row_index++) {
-            for (let column_index = 1; column_index <= (this.game_size * this.game_size); column_index++) {
-                if (game_puzzle_solution[row_index][column_index] === 0) {
-                    return false;
-                }
+        return false; // No valid value found, need to backtrack
+    }
+
+    shuffleValues() {
+        const values = [];
+        for (let i = 1; i <= this.game_size * this.game_size; i++) {
+            values.push(i);
+        }
+
+        return values.sort(() => Math.random() - 0.5); // Shuffle the array
+    }
+
+    isValidMove(row, column, value) {
+        return (
+            this.isRowValid(row, value) &&
+            this.isColumnValid(column, value) &&
+            this.isSquareValid(row, column, value)
+        );
+    }
+
+    isRowValid(row, value) {
+        for (let column = 1; column <= this.game_size * this.game_size; column++) {
+            if (this.game_puzzle_solution[row][column] === value) {
+                return false;
             }
         }
 
         return true;
     }
 
-    chooseNumberforField(row_index, column_index, available_values, recursive_iteration_counter) {
-        if (recursive_iteration_counter > 40) {
-            return 0;
+    isColumnValid(column, value) {
+        for (let row = 1; row <= this.game_size * this.game_size; row++) {
+            if (this.game_puzzle_solution[row][column] === value) {
+                return false;
+            }
         }
 
-        const possible_values_list = (
-            available_values[row_index][column_index]
-                .filter(value => value !== 0)
-        );
+        return true;
+    }
 
-        if (possible_values_list.length < 1) {
-            return 0;
+    isSquareValid(row, column, value) {
+        const startRow = Math.floor((row - 1) / this.game_size) * this.game_size + 1;
+        const startColumn = Math.floor((column - 1) / this.game_size) * this.game_size + 1;
+        for (let i = startRow; i < startRow + this.game_size; i++) {
+            for (let j = startColumn; j < startColumn + this.game_size; j++) {
+                if (this.game_puzzle_solution[i][j] === value) {
+                    return false;
+                }
+            }
         }
 
-        return possible_values_list[Math.floor(Math.random() * possible_values_list.length)];
+        return true;
     }
 }
