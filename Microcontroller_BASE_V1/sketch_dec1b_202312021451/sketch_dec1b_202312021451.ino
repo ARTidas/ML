@@ -1,172 +1,79 @@
-#include "ArduinoGraphics.h"
-#include "Arduino_LED_Matrix.h"
-#include <WiFiS3.h>
-#include "secrets.h" // This file contains the Wifi connection details
+// Define the pin number for the LED
+const int ledPin = 11;
 
-// Server details
-char server[] = "mlthesis.artidas.hu";
-int port = 443; // Use port 443 for HTTPS
-const int RESPONSE_LINE_NUMBER = 13;
-
-// Base message to be displayed
-String currentMessage = "Hello...";
-
-// Delay between requests
-unsigned long previousMillis = 0;
-const long interval = 10000;
-
-// Create an instance of the LED matrix
-ArduinoLEDMatrix matrix;
-// Create an instance for the Wifi client
-WiFiSSLClient client;
-
+// Morse code dictionary
+const char* morseCodeLetters[] = {".-", "-...", "-.-.", "-..", ".", "..-.", "--.", "....", "..", ".---", "-.-", ".-..", "--", "-.", "---", ".--.", "--.-", ".-.", "...", "-", "..-", "...-", ".--", "-..-", "-.--", "--.."};
 
 void setup() {
-  Serial.begin(9600);
-
-  // Initialize LED matrix
-  matrix.begin();
+  // Set the LED pin as an output
+  pinMode(ledPin, OUTPUT);
 }
-
 
 void loop() {
-  unsigned long currentMillis = millis();
-
-  if (currentMillis - previousMillis >= interval) {
-    previousMillis = currentMillis;
-
-    if (WiFi.status() != WL_CONNECTED) {
-      // Reconnect to Wi-Fi
-      if (WiFi.begin(WIFI_SSID, WIFI_PASSWORD) != WL_CONNECTED) {
-        Serial.println("Failed to reconnect to WiFi!");
-        displayMessageOnMatrix("Failed to reconnect to WiFi!!!");
-        delay(2000);  // Wait for a few seconds before retrying
-      }
-    }
-
-    printWifiStatus();
-
-    // Make an HTTPS request
-    String message = makeHttpsRequest();
-
-    if (message.length() > 0) {
-      // Display the received message on the LED matrix
-      currentMessage = message;
-    } else {
-      // Handle error or no response
-      Serial.println("Error or no response from server!!!");
-      displayMessageOnMatrix("Error or no response from server!!!");
-    }
-  }
-
-  displayMessageOnMatrix(currentMessage);
+  // Example: Encode and then decode the letter "S"
+  char letterToEncode = 'S';
+  String encoded = encodeMorse(letterToEncode);
+  char decoded = decodeMorse(encoded);
+  
+  // Output the encoded and decoded messages
+  Serial.begin(9600);
+  Serial.print("Encoded Morse code: ");
+  Serial.println(encoded);
+  Serial.print("Decoded letter: ");
+  Serial.println(decoded);
+  
+  // Blink the LED according to the encoded Morse code
+  sendMorseCode(encoded);
+  // Wait for 3 seconds
+  delay(3000);
 }
 
-
-String makeHttpsRequest() {
-  // close any connection before sending a new request.
-  // This will free the socket on the NINA module
-  if (client.connected()) {
-      client.stop();
-      delay(100);  // Allow some time for the socket to be released
-  }
-
-  if (!client.connect(server, port)) {
-    Serial.println("Connection to server failed");
-    displayMessageOnMatrix("Connection to server failed!!!");
+// Function to encode a letter to Morse code
+String encodeMorse(char letter) {
+  if (letter >= 'A' && letter <= 'Z') {
+    // Convert uppercase letter to Morse code
+    return String(morseCodeLetters[letter - 'A']);
+  } else if (letter >= 'a' && letter <= 'z') {
+    // Convert lowercase letter to Morse code
+    return String(morseCodeLetters[letter - 'a']);
+  } else {
+    // If the character is not a letter, return an empty string
     return "";
   }
-
-  // Make the HTTPS request
-  client.println("GET /Microcontroller_BASE_V1/get_message.php HTTP/1.1");
-  client.println("Host: mlthesis.artidas.hu");
-  client.println("Connection: close");
-  client.println();
-
-  // Wait for the server's response
-  while (client.connected() && !client.available());
-
-  // Read the response
-  String response = client.readString();
-  client.stop();
-
-  // Print the server's response
-  Serial.println("Server Response:");
-  Serial.println(response);
-
-  return getLine(response, RESPONSE_LINE_NUMBER);
 }
 
-
-void printWifiStatus() {
-  // print the SSID of the network you're attached to:
-  Serial.print("SSID: ");
-  Serial.println(WiFi.SSID());
-
-  // print your board's IP address:
-  IPAddress ip = WiFi.localIP();
-  Serial.print("IP Address: ");
-  Serial.println(ip);
-
-  // print the received signal strength:
-  long rssi = WiFi.RSSI();
-  Serial.print("signal strength (RSSI):");
-  Serial.print(rssi);
-  Serial.println(" dBm");
-}
-
-
-String replaceNewlinesWithSpace(String input) {
-  String result = input;
-  result.replace('\r', ' ');
-  result.replace('\n', ' ');
-  return result;
-}
-
-
-String getLine(const String& multiLineString, int lineNumber) {
-  int currentLine = 1; // Start from the first line
-  int start = 0;
-  int end = 0;
-
-  while (currentLine < lineNumber && end != -1) {
-    start = end + 1; // Move to the beginning of the next line
-    end = multiLineString.indexOf('\n', start); // Find the end of the next line
-    currentLine++;
-  }
-
-  // Check if the requested line number is within the valid range
-  if (currentLine == lineNumber) {
-    if (end == -1) {
-        // If this is the last line, return from the start position to the end of the string
-        return multiLineString.substring(start);
-    } else {
-        // Return the content of the requested line
-        return multiLineString.substring(start, end);
+// Function to decode Morse code to a letter
+char decodeMorse(String morse) {
+  for (int i = 0; i < 26; i++) {
+    if (morse == String(morseCodeLetters[i])) {
+      // Found the Morse code in the dictionary, return the corresponding letter
+      return (char)('A' + i);
     }
-  } else {
-    // Line number is out of range
-    return "Line not found";
   }
+  // If Morse code is not found in the dictionary, return a question mark '?'
+  return '?';
 }
 
-
-void displayMessageOnMatrix(String message) {
-  Serial.println("Displaying message:");
-  Serial.println(message);
-
-  matrix.beginDraw();
-  matrix.stroke(0xFFFFFFFF);
-  matrix.textScrollSpeed(50);
-  
-  const char* prefix = "    ";
-  const char* suffix = "    ";
-
-  matrix.textFont(Font_5x7);
-  matrix.beginText(0, 1, 0xFFFFFFFF);
-  matrix.println(
-    replaceNewlinesWithSpace(prefix + message + suffix)
-  );
-  matrix.endText(SCROLL_LEFT);
-  matrix.endDraw();
+// Function to send Morse code signal for a given string
+void sendMorseCode(String morseCode) {
+  for (int i = 0; i < morseCode.length(); i++) {
+    if (morseCode[i] == '.') {
+      // Send a dot signal (short blink)
+      digitalWrite(ledPin, HIGH);
+      delay(250); // Dot duration
+      digitalWrite(ledPin, LOW);
+      delay(250); // Gap between dots and dashes
+    } else if (morseCode[i] == '-') {
+      // Send a dash signal (long blink)
+      digitalWrite(ledPin, HIGH);
+      delay(750); // Dash duration
+      digitalWrite(ledPin, LOW);
+      delay(250); // Gap between dots and dashes
+    } else if (morseCode[i] == ' ') {6986
+      // Gap between letters
+      delay(750);
+    }
+  }
+  // Gap between words
+  delay(1750);
 }
