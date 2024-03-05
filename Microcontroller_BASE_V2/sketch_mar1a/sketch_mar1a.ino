@@ -1,261 +1,78 @@
-// Define the LED pin
-int ledPin = 11;
+const int irReceiverPin = A0;
+const int ledPin = 11;
+
+bool signalReceiving = false;
+unsigned long signalStart = 0;
+unsigned long pauseStart = 0;
+unsigned long signalLength = 0;
+unsigned long pauseLength = 0;
 
 void setup() {
-  // Set the LED pin as an output
-  pinMode(ledPin, OUTPUT);
-
-  // Start serial communication
   Serial.begin(9600);
+  pinMode(ledPin, OUTPUT);
 }
 
 void loop() {
-  // Wait for user input from serial monitor
-  /*if (Serial.available() > 0) {
-    // Read the input message from the serial monitor
-    String message = Serial.readStringUntil('\n');
-    Serial.println("Sending message: " + message);
-    // Translate and blink the message in Morse code
-    translateAndBlink(message);
+  // Measure signal strength and control LED brightness
+  int signalStrength = 1000 - analogRead(irReceiverPin);
+  analogWrite(ledPin, signalStrength / 4 - 18);
+
+  //Serial.println(analogRead(irReceiverPin));
+
+  // Detect signal transitions
+  if (!signalReceiving && signalStrength < 300) {
+    signalReceiving = true;
+    signalStart = micros();
+  }
+  else if (signalReceiving && signalStrength > 300) {
+    signalReceiving = false;
+    signalLength = micros() - signalStart;
+    //Serial.print("Signal Length: ");
+    //Serial.println(signalLength);
+    //decodeSignal(signalLength);
+    decodeSeries(signalLength, pauseLength);
+  }
+
+  // Measure pause length
+  if (!signalReceiving && signalStrength >= 300) {
+    if (micros() - signalStart > 1000) { // Ensure a minimum pause length
+      pauseLength = micros() - pauseStart;
+      //Serial.print("Pause Length: ");
+      //Serial.println(pauseLength);
+      //decodePause(pauseLength);
+    }
+    pauseStart = micros();
+  }
+
+  delay(125); // Adjust delay as needed
+}
+
+void decodeSeries(
+  unsigned long signalLength,
+  unsigned long pauseLength
+) {
+  signalLength /= 1000;
+  pauseLength /= 1000;
+
+  /*if (pauseLength > 124) {
+    Serial.print(" ");
   }*/
 
-  // Input message
-  String message = "Hellow World!";
-  Serial.println("Sending message: " + message);
-  // Translate and blink the message in Morse code
-  translateAndBlink(message);
-}
-
-// Function to translate and blink the message in Morse code
-void translateAndBlink(String message) {
-  // Iterate through each character in the message
-  for (int i = 0; i < message.length(); i++) {
-    char character = message.charAt(i);
-    
-    // Translate the character to Morse code and blink accordingly
-    switch(character) {
-      case 'A':
-      case 'a':
-        morseDot();
-        morseDash();
-        break;
-      case 'B':
-      case 'b':
-        morseDash();
-        morseDot();
-        morseDot();
-        morseDot();
-        break;
-      case 'C':
-      case 'c':
-        morseDash();
-        morseDot();
-        morseDash();
-        morseDot();
-        break;
-      case 'D':
-      case 'd':
-        morseDash();
-        morseDot();
-        morseDot();
-        break;
-      case 'E':
-      case 'e':
-        morseDot();
-        break;
-      case 'F':
-      case 'f':
-        morseDot();
-        morseDot();
-        morseDash();
-        morseDot();
-        break;
-      case 'G':
-      case 'g':
-        morseDash();
-        morseDash();
-        morseDot();
-        break;
-      case 'H':
-      case 'h':
-        morseDot();
-        morseDot();
-        morseDot();
-        morseDot();
-        break;
-      case 'I':
-      case 'i':
-        morseDot();
-        morseDot();
-        break;
-      case 'J':
-      case 'j':
-        morseDot();
-        morseDash();
-        morseDash();
-        morseDash();
-        break;
-      case 'K':
-      case 'k':
-        morseDash();
-        morseDot();
-        morseDash();
-        break;
-      case 'L':
-      case 'l':
-        morseDot();
-        morseDash();
-        morseDot();
-        morseDot();
-        break;
-      case 'M':
-      case 'm':
-        morseDash();
-        morseDash();
-        break;
-      case 'N':
-      case 'n':
-        morseDash();
-        morseDot();
-        break;
-      case 'O':
-      case 'o':
-        morseDash();
-        morseDash();
-        morseDash();
-        break;
-      case 'P':
-      case 'p':
-        morseDot();
-        morseDash();
-        morseDash();
-        morseDot();
-        break;
-      case 'Q':
-      case 'q':
-        morseDash();
-        morseDash();
-        morseDot();
-        morseDash();
-        break;
-      case 'R':
-      case 'r':
-        morseDot();
-        morseDash();
-        morseDot();
-        break;
-      case 'S':
-      case 's':
-        morseDot();
-        morseDot();
-        morseDot();
-        break;
-      case 'T':
-      case 't':
-        morseDash();
-        break;
-      case 'U':
-      case 'u':
-        morseDot();
-        morseDot();
-        morseDash();
-        break;
-      case 'V':
-      case 'v':
-        morseDot();
-        morseDot();
-        morseDot();
-        morseDash();
-        break;
-      case 'W':
-      case 'w':
-        morseDot();
-        morseDash();
-        morseDash();
-        break;
-      case 'X':
-      case 'x':
-        morseDash();
-        morseDot();
-        morseDot();
-        morseDash();
-        break;
-      case 'Y':
-      case 'y':
-        morseDash();
-        morseDot();
-        morseDash();
-        morseDash();
-        break;
-      case 'Z':
-      case 'z':
-        morseDash();
-        morseDash();
-        morseDot();
-        morseDot();
-        break;
-      case ' ':
-        // Add a delay for space between words
-        delay(700);
-        break;
-      case '.':
-        // Morse code for period (.)
-        morseDot();
-        morseDot();
-        morseDot();
-        morseDash();
-        morseDash();
-        morseDash();
-        break;
-      case ',':
-        // Morse code for comma (,)
-        morseDash();
-        morseDash();
-        morseDot();
-        morseDot();
-        morseDash();
-        morseDash();
-        break;
-      case '!':
-        // Morse code for exclamation mark (!)
-        morseDash();
-        morseDot();
-        morseDash();
-        morseDot();
-        morseDash();
-        morseDash();
-        break;
-      case '?':
-        // Morse code for question mark (?)
-        morseDot();
-        morseDot();
-        morseDash();
-        morseDash();
-        morseDot();
-        morseDot();
-        break;
-      default:
-        // Ignore unknown characters
-        break;
-    }
-    
-    // Add a delay between characters
-    delay(300);
+  if (signalLength == 125 || signalLength == 250 || signalLength == 375 || signalLength == 500 || signalLength == 1125) {
+    Serial.print(".");
   }
-}
-
-// Function to represent a dot in Morse code
-void morseDot() {
-  digitalWrite(ledPin, HIGH);
-  delay(250); // Dot duration
-  digitalWrite(ledPin, LOW);
-  delay(250); // Inter-element gap
-}
-
-// Function to represent a dash in Morse code
-void morseDash() {
-  digitalWrite(ledPin, HIGH);
-  delay(750); // Dash duration
-  digitalWrite(ledPin, LOW);
-  delay(250); // Inter-element gap
+  else if (signalLength == 2375 || signalLength == 2500 || signalLength == 2625) {
+    Serial.print(".");
+    Serial.println(" ");
+  }
+  else if (signalLength == 625 || signalLength == 750 || signalLength == 875 || signalLength == 1000) {
+    Serial.print("-");
+  }
+  else {
+    Serial.println(" ");
+    Serial.print("UnKnown series detected: ");
+    Serial.print(signalLength);
+    Serial.print(" ");
+    Serial.println(pauseLength);
+  }
 }

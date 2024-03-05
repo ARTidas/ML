@@ -17,6 +17,8 @@ void loop() {
   int signalStrength = 1000 - analogRead(irReceiverPin);
   analogWrite(ledPin, signalStrength / 4 - 18);
 
+  Serial.println(analogRead(irReceiverPin));
+
   // Detect signal transitions
   if (!signalReceiving && signalStrength < 300) {
     signalReceiving = true;
