@@ -30,5 +30,31 @@ int main()
     printf("\nToal possibilities: %d\n", counter);
     printf("====================================\n");
 
+    counter = 0;
+    printf("Both dice throws are equal:\n");
+    for (int i = 1; i <= 6; i++) {
+        for (int j = 1; j <= 6; j++) {
+            if (i == j) {
+                counter++;
+                printf("(%d,%d);", i, j);
+            }
+        }
+    }
+    printf("\nToal possibilities: %d\n", counter);
+    printf("====================================\n");
+
+    counter = 0;
+    printf("Both dice throws are different:\n");
+    for (int i = 1; i <= 6; i++) {
+        for (int j = 1; j <= 6; j++) {
+            if (i != j) {
+                counter++;
+                printf("(%d,%d);", i, j);
+            }
+        }
+    }
+    printf("\nToal possibilities: %d\n", counter);
+    printf("====================================\n");
+
     return 0;
 }
