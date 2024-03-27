@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generate</title>
+</head>
+<body>
+    <h1>Generate</h1>
+    <button onclick="generateNumbers()">Generate</button>
+    <p>Total numbers: <span id="total"></span></p>
+    <div id="numbers"></div>
+
+    <script>
+        function generateNumbers() {
+            let numbers = [];
+
+            // Generate all possible combinations of digits 0, 1, and 2 for three digits
+            for (let i = 0; i <= 2; i++) {
+                for (let j = 0; j <= 2; j++) {
+                    for (let k = 0; k <= 2; k++) {
+                        const number = `${i}${j}${k}`; // Concatenate digits to form a number
+                        numbers.push(parseInt(number)); // Convert string to integer and add to numbers array
+                    }
+                }
+            }
+
+            return numbers;
+        }
+
+        const allNumbers = generateNumbers();
+        console.log(allNumbers);
+    </script>
+</body>
+</html>
