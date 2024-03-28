@@ -51,6 +51,14 @@ iframe[name="frame"] {
     font-size: 10px;
     margin-left: 0px;
 }
+#map_full {
+    height: 85vh;
+    width: 99vw;
+    border: 1px solid #000;
+    margin: auto;
+    margin: 10px;
+    float: left;
+}
 
 header {
     font-size: 18px;

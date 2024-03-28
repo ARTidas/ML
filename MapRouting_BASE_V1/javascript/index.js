@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", function(event) {
+    
     let center = [48.32136917139583, 21.56666973293446];
     const map = L.map("map").setView(center, 17);
 
@@ -57,4 +58,5 @@ document.addEventListener("DOMContentLoaded", function(event) {
     
         return null;
     }
+
 });
