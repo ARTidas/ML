@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     ).addTo(map);
 
     const voronoiPolygons = L.featureGroup().addTo(map);
-    const drawnItems = new L.FeatureGroup().addTo(map);
+    const markersGroup = new L.FeatureGroup().addTo(map);
 
     L.control.layers(
         {
@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
             )
         },
         {
-            'Input': drawnItems,
+            'Markers': markersGroup,
             'Voronoi': voronoiPolygons,
         },
         {
@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
         }
     ).addTo(map);
 
-    // Draw rectangle around the center
+    // Draw (imaginary) rectangle around the center
     const bounds = L.latLngBounds(
         [
             [
@@ -48,13 +48,11 @@ document.addEventListener("DOMContentLoaded", function(event) {
             ]
         ]
     );
-    const rectangle = L.rectangle(bounds, {color: "#00f", weight: 1});
-    drawnItems.addLayer(rectangle)
 
     // Add markers on the 3x3 center line crosses
     for (let i = 1; i < 4; i += 1) {
         for (let j = 1; j < 4; j += 1) {
-            drawnItems.addLayer(
+            markersGroup.addLayer(
                 L.marker(
                     [
                         bounds.getSouth() + ((bounds.getNorth() - bounds.getSouth()) / 4) * i,
@@ -69,61 +67,47 @@ document.addEventListener("DOMContentLoaded", function(event) {
         new L.Control.Draw(
             {
                 edit: {
-                    featureGroup: drawnItems
+                    featureGroup: markersGroup
                 },
                 draw: {
-                    rectangle: true,
                     marker: true,
+                    rectangle: true,
                     polygon: false,
                     circle: false,
                     circlemarker: false,
-                    polyline: false
+                    polyline: false,
+                    featureGroup: markersGroup
                 }
             }
         )
     );
 
+    map.on('click', addMarker);
     map.on('draw:created', computeVoronoiDiagram);
     map.on('draw:edited', computeVoronoiDiagram);
     map.on('draw:deleted', computeVoronoiDiagram);
-    //map.on('draw:deletestop', computeVoronoiDiagram);
-    //map.on('draw:editmove', computeVoronoiDiagram);
-    //map.on('draw:editresize', computeVoronoiDiagram);
     computeVoronoiDiagram(); // TODO: Somehow solve to run this function on load...
 
+    function addMarker(e) {
+        markersGroup.addLayer(
+            L.marker(e.latlng)
+        );
+        computeVoronoiDiagram();
+    }
+
     function computeVoronoiDiagram() {
-        console.log('Computing Voronoi diagram...');
-        let bounds;
         let markers = [];
 
-        drawnItems.eachLayer(function (layer) {
-            //console.log(layer);
-            if (layer instanceof L.Rectangle) {
-                //console.log('Found rectangle...');
-                //console.log(layer.getBounds());
-                bounds = layer.getBounds();
-            }
-            else if (layer instanceof L.Marker) {
-                //console.log('Found marker...');
-                //console.log(layer.getLatLng());
-                markers.push(
-                    [
-                        layer.getLatLng().lat,
-                        layer.getLatLng().lng,
-                    ]
-                );
-            }
+        markersGroup.eachLayer(function (layer) {
+            markers.push(
+                [
+                    layer.getLatLng().lat,
+                    layer.getLatLng().lng,
+                ]
+            );
         });
 
-        const voronoi = new Voronoi(
-            [
-                bounds.getWest(),
-                bounds.getSouth(),
-                bounds.getEast(),
-                bounds.getNorth(),
-            ],
-            markers
-        );
+        const voronoi = new Voronoi(markers);
         voronoi.calculateVoronoiPolygons();
         voronoiPolygons.clearLayers();
         voronoi.getVoronoiPolygons().forEach(coordinates => {

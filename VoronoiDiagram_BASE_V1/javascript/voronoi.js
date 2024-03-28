@@ -1,14 +1,9 @@
 class Voronoi {
-    constructor(bounds, markers) {
-        this.boundWest = bounds[0];
-        this.boundSouth = bounds[1];
-        this.boundEast = bounds[2];
-        this.boundNorth = bounds[3];
+    constructor(markers) {
         this.markers = markers; // List of marker coordinates [[lat, lng], [lat, lng], ...]
-        this.voronoiPolygons = []; // Array to store calculated Voronoi polygons
+        this.voronoiPolygons = [];
     }
 
-    // Function to calculate Voronoi polygons
     calculateVoronoiPolygons() {
         // Convert markers to Turf.js FeatureCollection
         const turfPoints = {
@@ -25,15 +20,7 @@ class Voronoi {
             })
         };
 
-        const bbox = [ // Turf.js expects [west, south, east, north]
-            this.boundWest,
-            this.boundSouth,
-            this.boundEast,
-            this.boundNorth
-        ];
-
         // Calculate Voronoi diagram
-        //const voronoi = turf.voronoi(turfPoints, {bbox: bbox});
         const voronoi = turf.voronoi(turfPoints);
 
         // Extract Voronoi polygons
