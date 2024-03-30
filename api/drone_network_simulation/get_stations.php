@@ -31,7 +31,7 @@
                 stations MAIN
             WHERE
                 MAIN.is_active = 1
-        ";
+        ;";
         $statement = $handler->prepare($query_string);
         $statement->execute();
         
