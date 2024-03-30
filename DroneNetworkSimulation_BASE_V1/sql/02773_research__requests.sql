@@ -1,12 +1,15 @@
-CREATE TABLE emergencies (
-    id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
-    description TEXT NOT NULL,
-    location_latitude VARCHAR(255) NOT NULL,
-    location_longitude VARCHAR(255) NOT NULL,
-    status ENUM('pending', 'resolved', 'cancelled') NOT NULL,
-    is_active TINYINT NOT NULL,
+CREATE TABLE requests (
+    id INT(11) NOT NULL AUTO_INCREMENT,
+    type VARCHAR(50) NOT NULL,
+    location_latitude FLOAT NOT NULL,
+    location_longitude FLOAT NOT NULL,
+    description TEXT,
+    requester_name VARCHAR(100) NOT NULL,
+    requester_contact_phone VARCHAR(100) NOT NULL,
+    is_active TINYINT(1) NOT NULL DEFAULT 1,
     created_at DATETIME NOT NULL,
-    updated_at DATETIME NOT NULL
+    updated_at DATETIME NOT NULL,
+    PRIMARY KEY (id)
 );
 
 INSERT INTO emergencies (description, location_latitude, location_longitude, status, is_active, created_at, updated_at)

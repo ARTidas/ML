@@ -1,4 +1,13 @@
 document.addEventListener("DOMContentLoaded", function(event) {
+
+    var greenIcon = new L.Icon({
+        iconUrl: '../Common_BASE_V1/images/icons/marker-icon-2x-green.png',
+        shadowUrl: '../Common_BASE_V1/images/icons/marker-shadow.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41]
+    });
     
     let center = [48.32136917139583, 21.56666973293446]; // 3950 Sarospatak, Hungary
     const map = L.map('map_full').setView(center, 15);
@@ -12,7 +21,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
     ).addTo(map);
 
     const voronoiPolygons = L.featureGroup().addTo(map);
-    const markersGroup = new L.FeatureGroup().addTo(map);
+    const stationsGroup = new L.FeatureGroup().addTo(map);
+    const dronesGroup = new L.FeatureGroup().addTo(map);
+    const droneRangesGroup = new L.FeatureGroup().addTo(map);
 
     L.control.layers(
         {
@@ -25,8 +36,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
             )
         },
         {
-            'Markers': markersGroup,
+            'Stations': stationsGroup,
             'Voronoi': voronoiPolygons,
+            'Drones': dronesGroup,
+            'Drone ranges': droneRangesGroup,
         },
         {
             position: 'topleft',
@@ -34,13 +47,73 @@ document.addEventListener("DOMContentLoaded", function(event) {
         }
     ).addTo(map);
 
+    let drones = [];
+    fetch('https://research.artidas.hu/api/drone_network_simulation/get_drones_with_station.php')
+        .then(response => response.json())
+        .then(data => {
+            data.forEach(function(drone) {
+                drones.push(drone);
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+        })
+    ;
+
     fetch('https://research.artidas.hu/api/drone_network_simulation/get_stations.php')
         .then(response => response.json())
         .then(data => {
             data.forEach(function(station) {
-                let marker = L.marker([parseFloat(station.location_latitude), parseFloat(station.location_longitude)]);
-                marker.bindPopup("<strong>" + station.name + "</strong><br>Drone Capacity: " + station.drone_capacity);
-                markersGroup.addLayer(marker)
+                let station_marker = L.marker(
+                    [
+                        parseFloat(station.location_latitude),
+                        parseFloat(station.location_longitude)
+                    ]
+                );
+                station_marker.bindPopup(`
+                    <strong>#${station.id} - ${station.name}</strong><br/>
+                    Drone Capacity: ${station.drone_capacity}
+                `);
+                stationsGroup.addLayer(station_marker);
+
+                drones.forEach(function(drone) {
+                    if (station.id == drone.station_id) {
+                        let drone_marker = L.marker(
+                            [
+                                parseFloat(station.location_latitude) + getRandomCoordinateOffset(),
+                                parseFloat(station.location_longitude) + getRandomCoordinateOffset()
+                            ],
+                            {icon: greenIcon}
+                        );
+                        drone_marker.bindPopup(`
+                            <strong>#${drone.drone_id}</strong><br/>
+                            Station id: #${drone.station_id}<br/>
+                            Manufaturer: ${drone.drone_manufacturer}<br/>
+                            Model: ${drone.drone_model}<br/>
+                            Weight (kg): ${drone.drone_weight_kg}<br/>
+                            Max speed (km/h): ${drone.drone_max_speed_kmh}<br/>
+                            Payload (kg): ${drone.drone_payload_weight_kg}<br/>
+                            Range (km): ${drone.drone_range_km}
+                        `);
+                        dronesGroup.addLayer(drone_marker);
+
+                        drone_range_circle = L.circle(
+                            [
+                                parseFloat(station.location_latitude) + getRandomCoordinateOffset(),
+                                parseFloat(station.location_longitude) + getRandomCoordinateOffset()
+                            ],
+                            {
+                                radius: (drone.drone_range_km * 1000) / 2, // Lets divide by to for safety measurements
+                                color: '#0f0',
+                                weight: 1,
+                                opacity: 0.75,
+                                //fillColor: '#00f',
+                                fillOpacity: 0,
+                            }
+                        );
+                        droneRangesGroup.addLayer(drone_range_circle);
+                    }
+                });
             });
 
             computeVoronoiDiagram();
@@ -54,7 +127,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
         new L.Control.Draw(
             {
                 edit: {
-                    featureGroup: markersGroup
+                    featureGroup: stationsGroup
                 },
                 draw: {
                     marker: true,
@@ -63,7 +136,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
                     circle: false,
                     circlemarker: false,
                     polyline: false,
-                    featureGroup: markersGroup
+                    featureGroup: stationsGroup
                 }
             }
         )
@@ -77,7 +150,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
         console.log('Computing Voronoi diagram...');
         let markers = [];
 
-        markersGroup.eachLayer(function (layer) {
+        stationsGroup.eachLayer(function (layer) {
             markers.push(
                 [
                     layer.getLatLng().lat,
@@ -103,6 +176,14 @@ document.addEventListener("DOMContentLoaded", function(event) {
                 )
             )
         });
+    }
+
+    function getRandomCoordinateOffset() {
+        return getRandomArbitrary(-0.0001, 0.0001);
+    }
+
+    function getRandomArbitrary(min, max) {
+        return Math.random() * (max - min) + min;
     }
 
 });

@@ -18,12 +18,8 @@
         $handler = (new MysqlDatabaseConnectionBo())->getConnection();
 
         $query_string = "/* __CLASS__ __FUNCTION__ __FILE__ __LINE__ */
-                SELECT
-                STATION.id AS station_id,
-                STATION.name AS station_name,
-                STATION.location_latitude AS station_location_latitude,
-                STATION.location_longitude AS station_location_longitude,
-                STATION.drone_capacity AS station_drone_capacity,
+            SELECT
+                STATION_DRONE.station_id AS station_id,
                 DRONE.id AS drone_id,
                 DRONE.model AS drone_model,
                 DRONE.manufacturer AS drone_manufacturer,
@@ -33,13 +29,10 @@
                 DRONE.range_km AS drone_range_km
             FROM
                 station_drones STATION_DRONE
-                INNER JOIN stations STATION
-                    ON STATION_DRONE.station_id = STATION.id
                 INNER JOIN drones DRONE
                     ON STATION_DRONE.drone_id = DRONE.id
             WHERE
                 STATION_DRONE.is_active = 1 AND
-                STATION.is_active = 1 AND
                 DRONE.is_active = 1
         ;";
         $statement = $handler->prepare($query_string);
