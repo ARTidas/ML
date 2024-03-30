@@ -1,0 +1,43 @@
+CREATE TABLE emergencies (
+    id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+    description TEXT NOT NULL,
+    location_latitude VARCHAR(255) NOT NULL,
+    location_longitude VARCHAR(255) NOT NULL,
+    status ENUM('pending', 'resolved', 'cancelled') NOT NULL,
+    is_active TINYINT NOT NULL,
+    created_at DATETIME NOT NULL,
+    updated_at DATETIME NOT NULL
+);
+
+INSERT INTO emergencies (description, location_latitude, location_longitude, status, is_active, created_at, updated_at)
+VALUES
+    ('Heart attack reported at city center', '48.3230', '21.5840', 'pending', 1, NOW(), NOW()),
+    ('Car accident victim with severe injuries at university campus', '48.3100', '21.5850', 'pending', 1, NOW(), NOW()),
+    ('Medical emergency - unconscious person at shopping mall', '48.3190', '21.5830', 'pending', 1, NOW(), NOW()),
+    ('Stroke patient needs immediate assistance at city center', '48.3220', '21.5850', 'pending', 1, NOW(), NOW()),
+    ('Motorcycle accident - injured person at industrial zone', '48.3040', '21.5890', 'pending', 1, NOW(), NOW()),
+    ('Fall from height - construction site emergency', '48.3110', '21.5790', 'pending', 1, NOW(), NOW()),
+    ('Elderly person with breathing difficulties - suburban area', '48.3290', '21.5660', 'pending', 1, NOW(), NOW()),
+    ('Severe allergic reaction - residential neighborhood', '48.3180', '21.5890', 'pending', 1, NOW(), NOW()),
+    ('Pedestrian hit by vehicle - downtown area', '48.3200', '21.5760', 'pending', 1, NOW(), NOW()),
+    ('Fainting episode - city outskirts', '48.3350', '21.5700', 'pending', 1, NOW(), NOW()),
+    ('Overdose - near railway station', '48.3270', '21.5790', 'pending', 1, NOW(), NOW()),
+    ('Medical emergency - unconscious person at park', '48.3260', '21.5810', 'pending', 1, NOW(), NOW()),
+    ('Asthma attack - sports complex area', '48.3280', '21.5920', 'pending', 1, NOW(), NOW()),
+    ('Seizure - shopping mall', '48.3190', '21.5810', 'pending', 1, NOW(), NOW()),
+    ('Diabetic emergency - industrial zone', '48.3080', '21.5940', 'pending', 1, NOW(), NOW()),
+    ('Choking - restaurant in city center', '48.3210', '21.5830', 'pending', 1, NOW(), NOW()),
+    ('Unconscious person - university campus', '48.3110', '21.5820', 'pending', 1, NOW(), NOW()),
+    ('Chest pain - residential area', '48.3230', '21.5790', 'pending', 1, NOW(), NOW()),
+    ('Breathing difficulties - suburban neighborhood', '48.3310', '21.5750', 'pending', 1, NOW(), NOW()),
+    ('Eye injury - downtown area', '48.3200', '21.5770', 'pending', 1, NOW(), NOW()),
+    ('Severe headache - city outskirts', '48.3320', '21.5700', 'pending', 1, NOW(), NOW()),
+    ('Anaphylaxis - near railway station', '48.3250', '21.5800', 'pending', 1, NOW(), NOW()),
+    ('Seizure - city center', '48.3220', '21.5840', 'pending', 1, NOW(), NOW()),
+    ('Fever - suburban area', '48.3290', '21.5660', 'pending', 1, NOW(), NOW()),
+    ('Injury from fall - residential neighborhood', '48.3180', '21.5870', 'pending', 1, NOW(), NOW()),
+    ('Severe back pain - downtown area', '48.3200', '21.5760', 'pending', 1, NOW(), NOW()),
+    ('Concussion - city outskirts', '48.3350', '21.5700', 'pending', 1, NOW(), NOW()),
+    ('Allergic reaction - shopping mall', '48.3190', '21.5830', 'pending', 1, NOW(), NOW()),
+    ('Unconscious person - university campus', '48.3110', '21.5820', 'pending', 1, NOW(), NOW())
+;
