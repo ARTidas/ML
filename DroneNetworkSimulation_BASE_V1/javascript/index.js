@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function(event) {
     
-    let center = [48.32136917139583, 21.56666973293446];
+    let center = [48.32136917139583, 21.56666973293446]; // 3950 Sarospatak, Hungary
     const map = L.map('map_full').setView(center, 17);
     map.on('load', computeVoronoiDiagram);
 
