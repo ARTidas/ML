@@ -4,6 +4,11 @@
 	header("Expires: 0");
     header("Content-Type: application/json; charset=utf-8");
 
+    // Set headers to allow cross-origin requests
+    header("Access-Control-Allow-Origin: *");
+    header("Access-Control-Allow-Methods: GET, POST");
+    header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+
 	error_reporting(E_ALL & ~E_NOTICE);
 	ini_set('display_errors', 1);
 	

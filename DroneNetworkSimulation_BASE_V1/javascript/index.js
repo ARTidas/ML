@@ -1,8 +1,7 @@
 document.addEventListener("DOMContentLoaded", function(event) {
     
     let center = [48.32136917139583, 21.56666973293446]; // 3950 Sarospatak, Hungary
-    const map = L.map('map_full').setView(center, 17);
-    map.on('load', computeVoronoiDiagram);
+    const map = L.map('map_full').setView(center, 15);
 
     let OpenStreetMap = L.tileLayer(
         'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
@@ -35,33 +34,21 @@ document.addEventListener("DOMContentLoaded", function(event) {
         }
     ).addTo(map);
 
-    // Draw (imaginary) rectangle around the center
-    const bounds = L.latLngBounds(
-        [
-            [
-                center[0] - 0.002,
-                center[1] - 0.004
-            ],
-            [
-                center[0] + 0.002,
-                center[1] + 0.004
-            ]
-        ]
-    );
+    fetch('https://research.artidas.hu/api/drone_network_simulation/get_stations.php')
+        .then(response => response.json())
+        .then(data => {
+            data.forEach(function(station) {
+                let marker = L.marker([parseFloat(station.location_latitude), parseFloat(station.location_longitude)]);
+                marker.bindPopup("<strong>" + station.name + "</strong><br>Drone Capacity: " + station.drone_capacity);
+                markersGroup.addLayer(marker)
+            });
 
-    // Add markers on the 3x3 center line crosses
-    for (let i = 1; i < 4; i += 1) {
-        for (let j = 1; j < 4; j += 1) {
-            markersGroup.addLayer(
-                L.marker(
-                    [
-                        bounds.getSouth() + ((bounds.getNorth() - bounds.getSouth()) / 4) * i,
-                        bounds.getWest() + ((bounds.getEast() - bounds.getWest()) / 4) * j
-                    ]
-                )
-            );
-        }
-    }
+            computeVoronoiDiagram();
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+        })
+    ;
 
     map.addControl(
         new L.Control.Draw(
@@ -82,20 +69,12 @@ document.addEventListener("DOMContentLoaded", function(event) {
         )
     );
 
-    map.on('click', addMarker);
     map.on('draw:created', computeVoronoiDiagram);
     map.on('draw:edited', computeVoronoiDiagram);
     map.on('draw:deleted', computeVoronoiDiagram);
-    computeVoronoiDiagram(); // TODO: Somehow solve to run this function on load...
-
-    function addMarker(e) {
-        markersGroup.addLayer(
-            L.marker(e.latlng)
-        );
-        computeVoronoiDiagram();
-    }
 
     function computeVoronoiDiagram() {
+        console.log('Computing Voronoi diagram...');
         let markers = [];
 
         markersGroup.eachLayer(function (layer) {
@@ -112,7 +91,16 @@ document.addEventListener("DOMContentLoaded", function(event) {
         voronoiPolygons.clearLayers();
         voronoi.getVoronoiPolygons().forEach(coordinates => {
             voronoiPolygons.addLayer(
-                L.polygon(coordinates, { color: '#f00' })
+                L.polygon(
+                    coordinates,
+                    {
+                        color: '#00f',
+                        weight: 1,
+                        opacity: 0.75,
+                        //fillColor: '#00f',
+                        fillOpacity: 0,
+                    }
+                )
             )
         });
     }
