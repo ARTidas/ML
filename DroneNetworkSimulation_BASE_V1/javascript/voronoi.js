@@ -1,4 +1,5 @@
 class Voronoi {
+
     constructor(markers) {
         this.markers = markers; // List of marker coordinates [[lat, lng], [lat, lng], ...]
         this.voronoiPolygons = [];
@@ -34,4 +35,5 @@ class Voronoi {
     getVoronoiPolygons() {
         return this.voronoiPolygons;
     }
+    
 }

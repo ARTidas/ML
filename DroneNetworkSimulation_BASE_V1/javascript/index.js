@@ -8,6 +8,19 @@ document.addEventListener("DOMContentLoaded", function(event) {
         popupAnchor: [1, -34],
         shadowSize: [41, 41]
     });
+
+    const weather = new Weather();
+    let weatherData;
+    weather.getWeatherData()
+        .then(data => {
+            //console.log(data);
+            weatherData = data;
+            weather.displayWeatherData(data);
+        })
+        .catch(error => {
+            console.error('Error fetching weather data:', error);
+        })
+    ;
     
     let center = [48.32136917139583, 21.56666973293446]; // 3950 Sarospatak, Hungary
     const map = L.map('map_full').setView(center, 15);
@@ -72,7 +85,14 @@ document.addEventListener("DOMContentLoaded", function(event) {
                 );
                 station_marker.bindPopup(`
                     <strong>#${station.id} - ${station.name}</strong><br/>
-                    Drone Capacity: ${station.drone_capacity}
+                    Charge Type: ${station.charge_type}<br/>
+                    Drone Capacity: ${station.drone_capacity}<br/>
+                    Medical Services Available: ${station.is_medical ? 'Yes' : 'No'}<br/>
+                    Maintenance Services Available: ${station.is_maintenance ? 'Yes' : 'No'}<br/>
+                    Parcel Pickup Available: ${station.is_parcel_pickup ? 'Yes' : 'No'}<br/>
+                    Parking Allowed: ${station.is_parking_allowed ? 'Yes' : 'No'}<br/>
+                    Weather Proof: ${station.weather_proof ? 'Yes' : 'No'}<br/>
+                    Active: ${station.is_active ? 'Yes' : 'No'}
                 `);
                 stationsGroup.addLayer(station_marker);
 
