@@ -123,25 +123,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
         })
     ;
 
-    map.addControl(
-        new L.Control.Draw(
-            {
-                edit: {
-                    featureGroup: stationsGroup
-                },
-                draw: {
-                    marker: true,
-                    rectangle: true,
-                    polygon: false,
-                    circle: false,
-                    circlemarker: false,
-                    polyline: false,
-                    featureGroup: stationsGroup
-                }
-            }
-        )
-    );
-
     map.on('draw:created', computeVoronoiDiagram);
     map.on('draw:edited', computeVoronoiDiagram);
     map.on('draw:deleted', computeVoronoiDiagram);
