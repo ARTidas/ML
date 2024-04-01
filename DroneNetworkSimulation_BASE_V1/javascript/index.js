@@ -9,7 +9,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
         popupAnchor: [1, -34],
         shadowSize: [41, 41]
     });
-
     var yellowIcon = new L.Icon({
         iconUrl: '../Common_BASE_V1/images/icons/marker-icon-yellow.png',
         shadowUrl: '../Common_BASE_V1/images/icons/marker-shadow.png',
@@ -19,22 +18,50 @@ document.addEventListener("DOMContentLoaded", function(event) {
         shadowSize: [41, 41]
     });
 
+    // Retrieve weather information
     const weather = new Weather();
-    let weatherData;
-    weather.getWeatherData()
+    weather.getData()
         .then(data => {
-            //console.log(data);
-            weatherData = data;
-            weather.displayWeatherData(data);
+            weather.displayData(data);
         })
         .catch(error => {
-            console.error('Error fetching weather data:', error);
+            console.error('Error fetching data:', error);
+        })
+    ;
+
+    // Retrieve drone network request records
+    // Display markers for request latitude and longitude coordinates
+    const droneNetworkRequest = new DroneNetworkRequest();
+    droneNetworkRequest.getData()
+        .then(records => {
+            JSON.parse(records).forEach(function(record) {
+                let recordmarker = L.marker(
+                    [
+                        parseFloat(record.location_latitude),
+                        parseFloat(record.location_longitude)
+                    ],
+                    {icon: yellowIcon}
+                );
+                recordmarker.bindPopup(`
+                    Type: ${record.type}<br/>
+                    Location Latitude: ${record.location_latitude}<br/>
+                    Location Longitude: ${record.location_longitude}<br/>
+                    Description: ${record.description}<br/>
+                    Requester Name: ${record.requester_name}<br/>
+                    Requester Contact Phone: ${record.requester_contact_phone}<br/>
+                    Created At: ${record.created_at}<br/>
+                `);
+                stationsGroup.addLayer(recordmarker);
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
         })
     ;
     
+    // Setup base variables for the Leaflet map
     let center = [48.32136917139583, 21.56666973293446]; // 3950 Sarospatak, Hungary
     const map = L.map('map_full').setView(center, 15);
-
     let OpenStreetMap = L.tileLayer(
         'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
         {
@@ -43,11 +70,14 @@ document.addEventListener("DOMContentLoaded", function(event) {
         }
     ).addTo(map);
 
+    // Set the featuregroups which can be toggled on the Leaflet map
     const voronoiPolygons = L.featureGroup().addTo(map);
     const stationsGroup = new L.FeatureGroup().addTo(map);
     const dronesGroup = new L.FeatureGroup().addTo(map);
     const droneRangesGroup = new L.FeatureGroup().addTo(map);
+    const requestGroup = new L.FeatureGroup().addTo(map);
 
+    // Add controls for the Leaflet map to manage layers
     L.control.layers(
         {
             'OSM': OpenStreetMap,
@@ -63,6 +93,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
             'Voronoi': voronoiPolygons,
             'Drones': dronesGroup,
             'Drone ranges': droneRangesGroup,
+            'Requests': requestGroup,
         },
         {
             position: 'topleft',
