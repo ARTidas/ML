@@ -51,7 +51,21 @@ document.addEventListener("DOMContentLoaded", function(event) {
                     Requester Contact Phone: ${record.requester_contact_phone}<br/>
                     Created At: ${record.created_at}<br/>
                 `);
-                stationsGroup.addLayer(recordmarker);
+                requestGroup.addLayer(recordmarker);
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+        })
+    ;
+
+    // Retrieve drone records with drone station id
+    let drones = [];
+    const drone = new Drone();
+    drone.getData()
+        .then(records => {
+            JSON.parse(records).forEach(function(record) {
+                drones.push(record);
             });
         })
         .catch(error => {
@@ -100,19 +114,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
             collapsed: false
         }
     ).addTo(map);
-
-    let drones = [];
-    fetch('https://research.artidas.hu/api/drone_network_simulation/get_drones_with_station.php')
-        .then(response => response.json())
-        .then(data => {
-            data.forEach(function(drone) {
-                drones.push(drone);
-            });
-        })
-        .catch(error => {
-            console.error('Error fetching data:', error);
-        })
-    ;
 
     fetch('https://research.artidas.hu/api/drone_network_simulation/get_stations.php')
         .then(response => response.json())
