@@ -100,7 +100,19 @@ document.addEventListener("DOMContentLoaded", function(event) {
                 {
                     attribution: 'Google'
                 }
-            )
+            ),
+            'HillShade': L.tileLayer.wms(
+                'http://ows.mundialis.de/services/service?',
+                {
+                    layers: 'SRTM30-Hillshade'
+                }
+            ),
+            /*'Colored': L.tileLayer.wms(
+                'http://ows.mundialis.de/services/service?',
+                {
+                    layers: 'TOPO-WMS'
+                }
+            )*/
         },
         {
             'Stations': stationsGroup,
