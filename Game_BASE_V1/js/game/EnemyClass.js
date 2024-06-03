@@ -1,4 +1,4 @@
-class ItemClass extends GenesysClass {
+class EnemyClass extends GenesysClass {
 
     constructor(x, y, type) {
         super();
@@ -14,18 +14,9 @@ class ItemClass extends GenesysClass {
         imageMode(CENTER);
         //TODO: Can we do something refactoring to a factory method?
         switch (this.type) {
-            case ItemPoolClass.ITEM_AMMO:
+            case EnemyPoolClass.RAT:
                 image(
-                    item_ammo_image,
-                    this.x,
-                    this.y,
-                    this.width,
-                    this.height
-                );
-                break;
-            case ItemPoolClass.ITEM_FOOD:
-                image(
-                    item_food_image,
+                    enemy_rat_image,
                     this.x,
                     this.y,
                     this.width,
@@ -33,7 +24,7 @@ class ItemClass extends GenesysClass {
                 );
                 break;
             default:
-                console.error("Unknown item type encountered: " + this.type);
+                console.error("Unknown enemy type encountered: " + this.type);
         }
 
     }

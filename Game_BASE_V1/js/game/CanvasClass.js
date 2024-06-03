@@ -5,6 +5,8 @@ class CanvasClass extends GenesysClass {
 
         this.width = window.innerWidth;
         this.height = window.innerHeight;
+
+        //TODO: Can we initialize the canvas here?
     }
 
 }
