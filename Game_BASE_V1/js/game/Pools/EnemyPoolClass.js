@@ -35,7 +35,6 @@ class EnemyPoolClass extends AbstractPoolClass {
     }
 
     getMovementX() {
-        //TODO: Move enemies towards the Character object.
         return (
             Math.sign(Settings.character_x - mouseX) * Character.speed
         );
@@ -44,6 +43,27 @@ class EnemyPoolClass extends AbstractPoolClass {
     getMovementY() {
         return (
             Math.sign(Settings.character_y - mouseY) * Character.speed
+        );
+    }
+
+    moveToIntersect() {
+        this.rats.forEach((object) => this.moveObjectToIntersect(object));
+    }
+
+    moveObjectToIntersect(object) {
+        object.x += this.getIntersectMovementX(object);
+        object.y += this.getIntersectMovementY(object);
+    }
+
+    getIntersectMovementX(object) {
+        return (
+            Math.sign(Settings.character_x - object.x) * object.speed
+        );
+    }
+
+    getIntersectMovementY(object) {
+        return (
+            Math.sign(Settings.character_y - object.y) * object.speed
         );
     }
 

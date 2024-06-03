@@ -5,8 +5,10 @@ class EnemyClass extends GenesysClass {
 
         this.x          = x;
         this.y          = y;
-        this.width      = Settings.item_width;
-        this.height     = Settings.item_height;
+        this.width      = Settings.enemy_width;
+        this.height     = Settings.enemy_height;
+        this.speed      = Settings.enemy_speed;
+
         this.type       = type;
     }
 

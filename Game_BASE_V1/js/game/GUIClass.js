@@ -1,4 +1,5 @@
 class GUIClass {
+    //TODO: Think about how the GUI should look like?
 
     contructor() {
         this.x = Settings.gui_x;

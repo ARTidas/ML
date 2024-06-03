@@ -50,6 +50,7 @@ function draw() {
         ItemPool.move();
         EnemyPool.move();
     }
+    EnemyPool.moveToIntersect();
 
     Character.draw();
     ItemPool.draw();

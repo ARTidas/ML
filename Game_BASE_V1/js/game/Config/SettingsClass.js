@@ -38,6 +38,9 @@ class SettingsClass {
          ** ********************************************************************/
         this.enemy_number         = 100;
         this.enemy_rat_image_path = "media/enemy/rat.png";
+        this.enemy_speed          = 1;
+        this.enemy_width          = "20"; //TODO: Should different enemies be different sizes?
+        this.enemy_height         = "20";
     }
 
 }
