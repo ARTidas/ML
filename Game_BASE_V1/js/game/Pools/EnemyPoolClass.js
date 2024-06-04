@@ -34,18 +34,6 @@ class EnemyPoolClass extends AbstractPoolClass {
         this.rats.forEach((object) => this.moveObject(object));
     }
 
-    getMovementX() {
-        return (
-            Math.sign(Settings.character_x - mouseX) * Character.speed
-        );
-    }
-
-    getMovementY() {
-        return (
-            Math.sign(Settings.character_y - mouseY) * Character.speed
-        );
-    }
-
     moveToIntersect() {
         this.rats.forEach((object) => this.moveObjectToIntersect(object));
     }
@@ -56,14 +44,20 @@ class EnemyPoolClass extends AbstractPoolClass {
     }
 
     getIntersectMovementX(object) {
+        //return (Math.sign(Settings.character_x - object.x) * object.speed);
         return (
-            Math.sign(Settings.character_x - object.x) * object.speed
+            (Settings.character_x - object.x) /
+            (dist(Settings.character_x, Settings.character_y, object.x, object.y)) *
+            (object.speed)
         );
     }
 
     getIntersectMovementY(object) {
+        //return (Math.sign(Settings.character_y - object.y) * object.speed);
         return (
-            Math.sign(Settings.character_y - object.y) * object.speed
+            (Settings.character_y - object.y) /
+            (dist(Settings.character_x, Settings.character_y, object.x, object.y)) * //TODO: Refactor to only compute dist once
+            (object.speed)
         );
     }
 
