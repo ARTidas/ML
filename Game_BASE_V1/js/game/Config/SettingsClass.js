@@ -25,6 +25,17 @@ class SettingsClass {
         this.character_image_path   = "media/character/character.png";
 
         /** ********************************************************************
+         ** *** CHARACTER MISSILE **********************************************
+         ** ********************************************************************/
+        this.character_missile_x                = this.character_x;
+        this.character_missile_y                = this.character_y;
+        this.character_missile_width            = 10;
+        this.character_missile_height           = 10;
+        this.character_missile_speed            = 5;
+        this.character_misilie_number           = 1;
+        this.character_missile_spawn_cooldown   = 1; //Seconds
+
+        /** ********************************************************************
          ** *** ITEMS **********************************************************
          ** ********************************************************************/
         this.items_number           = 100;
@@ -41,6 +52,9 @@ class SettingsClass {
         this.enemy_speed          = 1;
         this.enemy_width          = "20"; //TODO: Should different enemies be different sizes?
         this.enemy_height         = "20";
+        this.enemy_health         = "5";
+        //TODO: Implement a minimum distance from the characters position.
+        //TODO: Even better, make enemies spawn from the edge of the clients viewport.
     }
 
 }

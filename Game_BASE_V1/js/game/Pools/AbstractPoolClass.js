@@ -3,6 +3,14 @@ class AbstractPoolClass {
     moveObject(object) {
         object.x += this.getMovementX();
         object.y += this.getMovementY();
+
+        // Check if object has target attributes and update the target position as well.
+        if ('target_x' in object) {
+            this.target_x += this.getMovementX();
+        }
+        if ('target_y' in object) {
+            this.target_y += this.getMovementY();
+        }
     }
 
     getMovementX() {

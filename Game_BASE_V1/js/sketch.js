@@ -1,11 +1,12 @@
 let Canvas = new CanvasClass();
 
-let Helper      = new HelperClass();
-let Settings    = new SettingsClass();
-let GUI         = new GUIClass();
-let Character   = new CharacterClass();
-let ItemPool    = new ItemPoolClass();
-let EnemyPool   = new EnemyPoolClass();
+let Helper                  = new HelperClass();
+let Settings                = new SettingsClass();
+let GUI                     = new GUIClass();
+let Character               = new CharacterClass();
+let ItemPool                = new ItemPoolClass();
+let EnemyPool               = new EnemyPoolClass();
+let CharacterMissilePool    = new CharacterMissilePoolClass();
 
 let is_mouse_pressed = false;
 
@@ -47,14 +48,22 @@ function draw() {
     strokeWeight(0);*/
 
     if (is_mouse_pressed) {
+        CharacterMissilePool.move();
         ItemPool.move();
         EnemyPool.move();
     }
-    EnemyPool.moveToIntersect();
 
+    EnemyPool.moveToIntersect()
+    if (EnemyPool.closest_enemy_object) {
+        CharacterMissilePool.spawn();
+    }
+    CharacterMissilePool.moveToTarget();
+
+    //TODO: Will the order of the drawing sequences matter?
     Character.draw();
     ItemPool.draw();
     EnemyPool.draw();
+    CharacterMissilePool.draw();
     GUI.draw();
 }
 
