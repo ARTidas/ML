@@ -65,6 +65,10 @@ function draw() {
     EnemyPool.draw();
     CharacterMissilePool.draw();
     GUI.draw();
+
+    //TODO: Check here and de-spawn character missiles which left the client view-port.
+    //TODO: Maybe this should be executed sooner?
+    CharacterMissilePool.despawn();
 }
 
 /** ********************************************************************
