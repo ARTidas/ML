@@ -12,7 +12,7 @@ $(document).ready(function() {
                 computeFibonacciSequence(i++) + " "
             );
         },
-        1000
+        250
     );
 
 });
